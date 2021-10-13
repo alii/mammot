@@ -108,7 +108,7 @@ export function option(
 
 		if (config.type && chosenType !== config.type && !config.force) {
 			throw new TypeError(
-				`Type mismatch. Found ${config.type} in the config, but inferred ${chosenType}!`,
+				`Type mismatch. Found ${config.type} in the config, but inferred ${chosenType}! Enable force mode in if this was a mistake.`,
 			);
 		}
 
