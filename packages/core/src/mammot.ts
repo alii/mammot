@@ -6,6 +6,7 @@ import {
 	ApplicationCommandDataResolvable,
 	ApplicationCommandOptionData,
 } from 'discord.js';
+import {inspect} from 'util';
 import {OptionMetadata} from '.';
 import {Command, ConstructableCommand} from './command';
 import {MammotError} from './errots';
@@ -29,6 +30,22 @@ interface ParsedCommand {
 export class Mammot {
 	public static client(options: MammotOptions) {
 		return new Mammot(options);
+	}
+
+	public static debugCommands(commands: Mammot['commands']) {
+		const result = inspect(
+			new Map(
+				[...commands.entries()].map(entry => {
+					const [name, cmd] = entry;
+					const {command, ...rest} = cmd;
+					return [name, rest] as const;
+				}),
+			),
+			true,
+			10,
+		);
+
+		console.log(result);
 	}
 
 	public readonly commands: Map<string, ParsedCommand> = new Map();

@@ -31,4 +31,4 @@ class MyCommand extends Command {
 
 void mammot.addCommands([MyCommand]);
 
-console.log(mammot.commands);
+Mammot.debugCommands(mammot.commands);
