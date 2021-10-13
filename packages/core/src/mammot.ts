@@ -50,13 +50,10 @@ export class Mammot {
 	public readonly commands: Map<string, ParsedCommand> = new Map();
 
 	public readonly client: DiscordClient<true>;
-	private readonly developmentGuild;
 
 	private constructor(options: MammotOptions, isDev: boolean) {
 		const {developmentGuild, ready, ...rest} = options;
 		this.client = new DiscordClient(rest);
-
-		this.developmentGuild = developmentGuild;
 
 		const mapped = [...this.commands.values()].map(command => {
 			const options = command.options.map(option => ({
@@ -73,7 +70,7 @@ export class Mammot {
 
 		this.client.once('ready', async () => {
 			if (isDev) {
-				const guild = await this.client.guilds.fetch(this.developmentGuild);
+				const guild = await this.client.guilds.fetch(developmentGuild);
 				await guild.commands.set(mapped);
 			} else {
 				await this.client.application.commands.set(mapped);
