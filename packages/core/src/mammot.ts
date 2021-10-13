@@ -35,13 +35,13 @@ export class Mammot {
 		const result = inspect(
 			new Map(
 				[...commands.entries()].map(entry => {
-					const [name, cmd] = entry;
-					const {command, ...rest} = cmd;
+					const [name, {command, ...rest}] = entry;
 					return [name, rest] as const;
 				}),
 			),
 			true,
 			10,
+			true,
 		);
 
 		console.log(result);
