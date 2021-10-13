@@ -34,6 +34,11 @@ export abstract class Command {
 					break;
 				}
 
+				case 'MENTIONABLE': {
+					results.push(interaction.options.getMentionable(...args));
+					break;
+				}
+
 				case 'INTEGER': {
 					results.push(interaction.options.getInteger(...args));
 					break;

@@ -16,6 +16,17 @@ export interface OptionConfig {
 	required: boolean;
 	description: string;
 	type: OptionMetadataTypes;
+
+	/**
+	 * Some types like MENTIONABLE cannot be inferred
+	 * however they will throw a TypeError mismatch when used.
+	 *
+	 * By enabling this flag, you will be able to force these
+	 * option types and not have the error thrown.
+	 *
+	 * @warning
+	 */
+	force?: boolean;
 }
 
 export interface OptionMetadata {
@@ -95,7 +106,7 @@ export function option(
 			}
 		}
 
-		if (config.type && chosenType !== config.type) {
+		if (config.type && chosenType !== config.type && !config.force) {
 			throw new TypeError(
 				`Type mismatch. Found ${config.type} in the config, but inferred ${chosenType}!`,
 			);
