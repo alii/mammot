@@ -40,6 +40,11 @@ export abstract class Command {
 					break;
 				}
 
+				case 'ROLE': {
+					results.push(interaction.options.getRole(...args));
+					break;
+				}
+
 				case 'MENTIONABLE': {
 					results.push(interaction.options.getMentionable(...args));
 					break;

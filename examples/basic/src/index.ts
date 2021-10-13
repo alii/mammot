@@ -1,6 +1,6 @@
 import 'dotenv/config';
 import {Mammot, Command, option, data} from '@mammot/core';
-import {CommandInteraction, VoiceChannel, User} from 'discord.js';
+import {CommandInteraction, Role, User} from 'discord.js';
 
 const mammot = Mammot.client({
 	intents: [],
@@ -15,8 +15,8 @@ class MyCommand extends Command {
 	public async run(
 		interaction: CommandInteraction,
 
-		@option('channel')
-		channel: VoiceChannel,
+		@option('role')
+		role: Role,
 
 		@option('user')
 		user: User,
@@ -24,7 +24,7 @@ class MyCommand extends Command {
 		@option('age', {type: 'INTEGER'})
 		age: number,
 	) {
-		console.log({channel, user, age});
+		console.log({role, user, age});
 		await interaction.reply('pog');
 	}
 }

@@ -3,6 +3,7 @@ import {
 	ApplicationCommandOptionData,
 	GuildChannel,
 	GuildMember,
+	Role,
 	User,
 } from 'discord.js';
 import {Except} from 'type-fest';
@@ -107,6 +108,11 @@ export function option(
 				}
 
 				chosenType = config.type;
+				break;
+			}
+
+			case type === Role: {
+				chosenType = 'ROLE';
 				break;
 			}
 
