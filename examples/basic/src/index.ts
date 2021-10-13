@@ -4,7 +4,7 @@ import {CommandInteraction, Role, User} from 'discord.js';
 
 const mammot = Mammot.client({
 	intents: [],
-	developmentGuild: '1234567890',
+	developmentGuild: process.env.DEVELOPMENT_GUILD_ID!,
 	ready(user) {
 		console.log('Ready as', user.username);
 	},
