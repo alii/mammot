@@ -10,10 +10,16 @@ const mammot = Mammot.client({
 class MyCommand extends Command {
 	public async run(
 		interaction: CommandInteraction,
-		@option('channel') channel: VoiceChannel,
-		@option('user') user: User,
-		@option('age', {type: 'INTEGER'}) age: number,
-	): Promise<void> {
+
+		@option('channel')
+		channel: VoiceChannel,
+
+		@option('user')
+		user: User,
+
+		@option('age', {type: 'INTEGER'})
+		age: number,
+	) {
 		console.log({channel, user, age});
 		await interaction.reply('pog');
 	}
