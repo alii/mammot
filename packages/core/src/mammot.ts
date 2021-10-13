@@ -7,7 +7,7 @@ import {
 	ApplicationCommandOptionData,
 } from 'discord.js';
 import {inspect} from 'util';
-import {OptionMetadata} from '.';
+import {OptionMetadata} from './decorators';
 import {Command, ConstructableCommand} from './command';
 import {MammotError} from './errots';
 import {readCommand} from './reflection';
@@ -80,7 +80,12 @@ export class Mammot {
 		});
 
 		this.client.once('ready', async () => {
-			await this.client.application.commands.set(mapped);
+			if (isDev) {
+				const guild = await this.client.guilds.fetch(this.developmentGuild);
+				await guild.commands.set(mapped);
+			} else {
+				await this.client.application.commands.set(mapped);
+			}
 
 			// Alert user that we are ready
 			await ready(this.client.user);

@@ -1,5 +1,5 @@
 import {CommandInteraction} from 'discord.js';
-import {OptionMetadata} from '.';
+import {OptionMetadata} from './decorators';
 import {Mammot} from './mammot';
 import {GetAbstractConstructorArgs} from './utils';
 
