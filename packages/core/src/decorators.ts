@@ -1,5 +1,5 @@
 import {Command} from './command';
-import {addOption, MetadataKey} from './reflection';
+import {addOption, getParamType} from './reflection';
 
 export interface OptionConfig {
 	required: boolean;
@@ -9,6 +9,7 @@ export interface OptionConfig {
 export interface OptionMetadata {
 	config: Partial<OptionConfig>;
 	index: number;
+	type: 'STRING' | 'INTEGER';
 }
 
 /**
@@ -30,9 +31,29 @@ export function option(config: Partial<OptionConfig> = {}): ParameterDecorator {
 			);
 		}
 
+		const type = getParamType(target, index);
+
+		let result;
+		switch (true) {
+			case type === String: {
+				result = 'STRING' as const;
+				break;
+			}
+
+			case type === Number: {
+				result = 'INTEGER' as const;
+				break;
+			}
+
+			default: {
+				throw new Error('Unsupported data type.');
+			}
+		}
+
 		addOption(target, {
 			config,
 			index,
+			type: result,
 		});
 	};
 }

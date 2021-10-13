@@ -16,3 +16,13 @@ export function addOption(command: Command, metadata: OptionMetadata) {
 		command,
 	);
 }
+
+export function getParamType(command: Command, index: number): unknown {
+	const data = Reflect.getMetadata('design:paramtypes', command, 'run');
+
+	if (!data) {
+		throw new Error(`Could not get reflection types for ${Command.name}`);
+	}
+
+	return data[index] as unknown;
+}

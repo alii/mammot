@@ -1450,6 +1450,7 @@ __metadata:
   resolution: "@reflect/example-basic@workspace:examples/basic"
   dependencies:
     ts-node: ^10.3.0
+    typescript: ^4.4.4
   languageName: unknown
   linkType: soft
 
