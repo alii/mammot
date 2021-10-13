@@ -1,4 +1,5 @@
 import {
+	ApplicationCommandOptionChoice,
 	ApplicationCommandOptionData,
 	GuildChannel,
 	GuildMember,
@@ -6,17 +7,18 @@ import {
 } from 'discord.js';
 import {Except} from 'type-fest';
 import {Command} from './command';
-import {addOption, getParamType, setName} from './reflection';
+import {addOption, getParamType, addCommandData} from './reflection';
 
-type OptionMetadataTypes = Extract<
-	ApplicationCommandOptionData['type'],
-	string
+type OptionMetadataTypes = Exclude<
+	Extract<ApplicationCommandOptionData['type'], string>,
+	`SUB_${string}`
 >;
 
 export interface OptionConfig {
 	required: boolean;
 	description: string;
 	type: OptionMetadataTypes;
+	choices?: ApplicationCommandOptionChoice[];
 
 	/**
 	 * Some types like MENTIONABLE cannot be inferred
@@ -144,9 +146,14 @@ export function option(
 export interface CommandMetadata {
 	name: string;
 	description: string;
+	defaultPermission?: boolean;
 }
 
-export function name(val: string, description: string): ClassDecorator {
+export function data(
+	name: string,
+	description: string,
+	config: Partial<Except<CommandMetadata, 'name' | 'description'>> = {},
+): ClassDecorator {
 	return target => {
 		const isCommand = target.prototype instanceof Command;
 
@@ -156,6 +163,10 @@ export function name(val: string, description: string): ClassDecorator {
 			);
 		}
 
-		setName(target, {name: val, description});
+		addCommandData(target, {
+			name,
+			description,
+			...config,
+		});
 	};
 }

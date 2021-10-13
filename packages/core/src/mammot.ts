@@ -4,6 +4,7 @@ import {
 	Snowflake,
 	ClientUser,
 	ApplicationCommandDataResolvable,
+	ApplicationCommandOptionData,
 } from 'discord.js';
 import {OptionMetadata} from '.';
 import {Command, ConstructableCommand} from './command';
@@ -44,17 +45,27 @@ export class Mammot {
 			await ready(this.client.user);
 
 			await this.client.application.commands.set(
-				[...this.commands.values()].map(
-					(command): ApplicationCommandDataResolvable => ({
-						options: command.options.map(option => ({
+				[...this.commands.values()].map(command => {
+					const options = command.options.map(option => {
+						const value: ApplicationCommandOptionData = {
 							type: option.config.type,
 							required: option.config.required,
 							description: option.config.description ?? 'no description',
+							choices: option.config.choices,
 							name: option.name,
-						})),
+						};
+
+						return value;
+					});
+
+					const result: ApplicationCommandDataResolvable = {
+						options,
 						name: command.name,
-					}),
-				),
+						description: command.description,
+					};
+
+					return result;
+				}),
 			);
 		});
 	}

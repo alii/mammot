@@ -54,7 +54,7 @@ export function getParamType(command: Command, index: number, prop = 'run') {
 	return data[index];
 }
 
-export function setName(
+export function addCommandData(
 	// Command here is the constructor `Function` rather than an instance of the class,
 	// so we cannot type this any further unfortunately.
 	// eslint-disable-next-line @typescript-eslint/ban-types

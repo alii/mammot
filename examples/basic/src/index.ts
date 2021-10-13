@@ -1,13 +1,16 @@
 import 'dotenv/config';
-import {Mammot, Command, option, name} from '@mammot/core';
+import {Mammot, Command, option, data} from '@mammot/core';
 import {CommandInteraction, VoiceChannel, User} from 'discord.js';
 
 const mammot = Mammot.client({
 	intents: [],
 	developmentGuild: '1234567890',
+	ready(user) {
+		console.log('Ready as', user.username);
+	},
 });
 
-@name('ratio')
+@data('ratio', 'Command will ratio somebody')
 class MyCommand extends Command {
 	public async run(
 		interaction: CommandInteraction,
