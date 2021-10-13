@@ -1,9 +1,9 @@
 import 'dotenv/config';
 import {Mammot, Command, option, data} from '@mammot/core';
-import {CommandInteraction, Role, User} from 'discord.js';
+import {CommandInteraction, Role, User, Intents} from 'discord.js';
 
 const mammot = Mammot.client({
-	intents: [],
+	intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES],
 	developmentGuild: process.env.DEVELOPMENT_GUILD_ID!,
 	ready(user) {
 		console.log('Ready as', user.username);

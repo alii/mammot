@@ -48,37 +48,17 @@ export class Mammot {
 	}
 
 	public readonly commands: Map<string, ParsedCommand> = new Map();
-
 	public readonly client: DiscordClient<true>;
 
-	private constructor(options: MammotOptions, isDev: boolean) {
+	private readonly developmentGuildId: Snowflake;
+	private readonly options;
+
+	private constructor(options: MammotOptions, private readonly isDev: boolean) {
 		const {developmentGuild, ready, ...rest} = options;
+
+		this.options = options;
 		this.client = new DiscordClient(rest);
-
-		const mapped = [...this.commands.values()].map(command => {
-			const options = command.options.map(option => ({
-				...option.config,
-				name: option.name,
-			}));
-
-			return {
-				options,
-				name: command.name,
-				description: command.description,
-			};
-		});
-
-		this.client.once('ready', async () => {
-			if (isDev) {
-				const guild = await this.client.guilds.fetch(developmentGuild);
-				await guild.commands.set(mapped);
-			} else {
-				await this.client.application.commands.set(mapped);
-			}
-
-			// Alert user that we are ready
-			await ready(this.client.user);
-		});
+		this.developmentGuildId = developmentGuild;
 	}
 
 	/**
@@ -108,7 +88,20 @@ export class Mammot {
 	}
 
 	public async login(token?: string) {
-		this.client.on('interaction', interaction => {
+		const mapped = [...this.commands.values()].map(command => {
+			const options = command.options.map(option => ({
+				...option.config,
+				name: option.name,
+			}));
+
+			return {
+				options,
+				name: command.name,
+				description: command.description,
+			};
+		});
+
+		this.client.on('interactionCreate', interaction => {
 			if (!interaction.isCommand()) {
 				return;
 			}
@@ -137,6 +130,20 @@ export class Mammot {
 					content: message,
 				});
 			}
+		});
+
+		this.client.once('ready', async () => {
+			if (this.isDev) {
+				await this.client.application.commands.set(
+					mapped,
+					this.developmentGuildId,
+				);
+			} else {
+				await this.client.application.commands.set(mapped);
+			}
+
+			// Alert user that we are ready
+			await this.options.ready(this.client.user);
 		});
 
 		return this.client.login(token);
