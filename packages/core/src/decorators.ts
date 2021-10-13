@@ -1,4 +1,9 @@
-import {GuildChannel, GuildMember, User} from 'discord.js';
+import {
+	ApplicationCommandOptionData,
+	GuildChannel,
+	GuildMember,
+	User,
+} from 'discord.js';
 import {Command} from './command';
 import {addOption, getParamType} from './reflection';
 
@@ -10,7 +15,7 @@ export interface OptionConfig {
 export interface OptionMetadata {
 	config: Partial<OptionConfig>;
 	index: number;
-	type: 'STRING' | 'INTEGER' | 'CHANNEL' | 'MEMBER';
+	type: Extract<ApplicationCommandOptionData['type'], string>;
 }
 
 /**
@@ -48,7 +53,7 @@ export function option(config: Partial<OptionConfig> = {}): ParameterDecorator {
 			}
 
 			case type === GuildMember || type === User: {
-				result = 'MEMBER' as const;
+				result = 'USER' as const;
 				break;
 			}
 
