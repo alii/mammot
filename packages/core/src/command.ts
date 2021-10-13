@@ -11,7 +11,13 @@ export abstract class Command {
 		const results: unknown[] = [];
 
 		for (const metadata of metadatum) {
+			const index = metadatum.indexOf(metadata);
 			const args = [metadata.name, metadata.config.required ?? false] as const;
+
+			// Add one as the interaction will be the first index
+			if (index + 1 !== metadata.index) {
+				throw new Error('Unexpected index!');
+			}
 
 			switch (metadata.config.type) {
 				case 'STRING': {
