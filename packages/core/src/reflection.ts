@@ -17,8 +17,8 @@ export function addOption(command: Command, metadata: OptionMetadata) {
 	);
 }
 
-export function getParamType(command: Command, index: number) {
-	const data = Reflect.getMetadata('design:paramtypes', command, 'run') as
+export function getParamType(command: Command, index: number, prop = 'run') {
+	const data = Reflect.getMetadata('design:paramtypes', command, prop) as
 		| unknown[]
 		| undefined;
 

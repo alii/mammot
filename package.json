@@ -22,7 +22,8 @@
 		"dev": "preconstruct dev",
 		"build": "preconstruct build",
 		"example": "yarn workspace @mammot/example-basic start",
-		"tc": "tsc --noEmit"
+		"tc": "tsc --noEmit",
+		"prepublish": "yarn build"
 	},
 	"packageManager": "yarn@3.0.2",
 	"workspaces": [

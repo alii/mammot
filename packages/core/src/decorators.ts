@@ -10,20 +10,30 @@ import {addOption, getParamType} from './reflection';
 export interface OptionConfig {
 	required: boolean;
 	description: string;
+	type: OptionMetadataTypes;
 }
 
+type OptionMetadataTypes = Extract<
+	ApplicationCommandOptionData['type'],
+	string
+>;
+
 export interface OptionMetadata {
-	config: Partial<OptionConfig>;
+	name: string;
 	index: number;
-	type: Extract<ApplicationCommandOptionData['type'], string>;
+	// Mark .type as required
+	config: Partial<OptionConfig> & Pick<OptionConfig, 'type'>;
 }
 
 /**
- *
+ * Build an option decorator
  * @param required If this option is required or not
  * @returns A decorator function that can be used to decorate an argument on the run method
  */
-export function option(config: Partial<OptionConfig> = {}): ParameterDecorator {
+export function option(
+	name: string,
+	config: Partial<OptionConfig> = {},
+): ParameterDecorator {
 	return (target, property, index) => {
 		if (property !== 'run') {
 			throw new Error(
@@ -39,27 +49,42 @@ export function option(config: Partial<OptionConfig> = {}): ParameterDecorator {
 
 		const type = getParamType(target, index);
 
-		let result: OptionMetadata['type'];
+		let result: OptionMetadata['config']['type'];
 
 		switch (true) {
 			case type === String: {
-				result = 'STRING' as const;
+				result = 'STRING';
+				break;
+			}
+
+			case type === Boolean: {
+				result = 'BOOLEAN';
 				break;
 			}
 
 			case type === Number: {
-				result = 'INTEGER' as const;
+				if (!config.type) {
+					throw new Error('You must specify a type for numbers in the config!');
+				}
+
+				if (!['NUMBER', 'INTEGER'].includes(config.type)) {
+					throw new Error(
+						`Number type must be either \`NUMBER\` or \`INTEGER\`. Received ${config.type}`,
+					);
+				}
+
+				result = config.type;
 				break;
 			}
 
-			case type === GuildMember || type === User: {
-				result = 'USER' as const;
+			case type === User || type === GuildMember: {
+				result = 'USER';
 				break;
 			}
 
 			// Catchall case for all types of guild channel
 			case type instanceof GuildChannel.constructor: {
-				result = 'CHANNEL' as const;
+				result = 'CHANNEL';
 				break;
 			}
 
@@ -69,9 +94,12 @@ export function option(config: Partial<OptionConfig> = {}): ParameterDecorator {
 		}
 
 		addOption(target, {
-			config,
+			name,
+			config: {
+				...config,
+				type: result,
+			},
 			index,
-			type: result,
 		});
 	};
 }
