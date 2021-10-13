@@ -61,7 +61,7 @@ export abstract class Command {
 		}
 
 		// Reverse because for some reason they are in the wrong order
-		return results.reverse();
+		return results;
 	}
 
 	protected readonly mammot: Mammot;

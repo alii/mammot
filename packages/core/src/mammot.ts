@@ -89,7 +89,7 @@ export class Mammot {
 
 	public async login(token?: string) {
 		const mapped = [...this.commands.values()].map(command => {
-			const options = command.options.map(option => ({
+			const options = command.options.reverse().map(option => ({
 				...option.config,
 				name: option.name,
 			}));

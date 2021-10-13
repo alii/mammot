@@ -19,19 +19,19 @@ class MyCommand extends Command {
 	public async run(
 		interaction: CommandInteraction,
 
-		@option('role', {description: 'dsadas'})
-		role: Role,
-
-		@option('user', {description: 'The user'})
+		// Required arguments go before optional arguments
+		@option('user', {description: 'The user', required: true})
 		user: User,
 
+		@option('role', {description: 'dsadas'})
+		role?: Role,
+
 		@option('age', {description: 'an age', type: 'INTEGER'})
-		age: number,
+		age?: number,
 	) {
+		await user.fetch();
 		await interaction.reply(JSON.stringify({role, user, age}));
 	}
 }
 
 void mammot.addCommands([MyCommand]).login(process.env.DISCORD_TOKEN);
-
-Mammot.debugCommands(mammot.commands);
