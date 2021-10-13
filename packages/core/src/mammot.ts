@@ -90,6 +90,11 @@ export class Mammot {
 		return this;
 	}
 
+	/**
+	 * Load all interactions & login to client.
+	 * @param token Token of your Bot to login with.
+	 * @returns The token of the bot account used.
+	 */
 	public async login(token?: string) {
 		const mapped = [...this.commands.values()].map(command => {
 			const options = command.options.reverse().map(option => ({
