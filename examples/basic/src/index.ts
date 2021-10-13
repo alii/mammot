@@ -12,7 +12,7 @@ class MyCommand extends Command {
 		@option('channel') channel: VoiceChannel,
 		@option('user') user: User,
 		@option('age', {type: 'INTEGER'})
-		age: number,
+		age: string,
 	): Promise<void> {
 		await setTimeout(3000);
 		console.log({channel, user, age});

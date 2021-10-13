@@ -34,6 +34,11 @@ export abstract class Command {
 					break;
 				}
 
+				case 'INTEGER': {
+					results.push(interaction.options.getInteger(...args));
+					break;
+				}
+
 				case 'NUMBER': {
 					results.push(interaction.options.getNumber(...args));
 					break;

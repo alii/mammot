@@ -7,16 +7,16 @@ import {
 import {Command} from './command';
 import {addOption, getParamType} from './reflection';
 
+type OptionMetadataTypes = Extract<
+	ApplicationCommandOptionData['type'],
+	string
+>;
+
 export interface OptionConfig {
 	required: boolean;
 	description: string;
 	type: OptionMetadataTypes;
 }
-
-type OptionMetadataTypes = Extract<
-	ApplicationCommandOptionData['type'],
-	string
->;
 
 export interface OptionMetadata {
 	name: string;
@@ -37,69 +37,77 @@ export function option(
 	return (target, property, index) => {
 		if (property !== 'run') {
 			throw new Error(
-				`The @option() decorator can only be used on the .run method. You used it on \`${property.toString()}\``,
+				`The @option() decorator can only be used on the .run method. You used it on ${property.toString()}`,
 			);
 		}
 
 		if (!(target instanceof Command)) {
 			throw new Error(
-				`You can only use @option() on a class extending Command! You used \`${target.constructor.name}\``,
+				`You can only use @option() on a class extending Command! You used ${target.constructor.name}`,
 			);
 		}
 
 		const type = getParamType(target, index);
 
-		let result: OptionMetadata['config']['type'];
+		let chosenType: OptionMetadataTypes;
 
 		switch (true) {
 			case type === String: {
-				result = 'STRING';
+				chosenType = 'STRING';
 				break;
 			}
 
 			case type === Boolean: {
-				result = 'BOOLEAN';
+				chosenType = 'BOOLEAN';
 				break;
 			}
 
 			case type === Number: {
 				if (!config.type) {
-					throw new Error('You must specify a type for numbers in the config!');
-				}
-
-				if (!['NUMBER', 'INTEGER'].includes(config.type)) {
-					throw new Error(
-						`Number type must be either \`NUMBER\` or \`INTEGER\`. Received ${config.type}`,
+					throw new TypeError(
+						'You must specify a type for numbers in the config!',
 					);
 				}
 
-				result = config.type;
+				if (!['NUMBER', 'INTEGER'].includes(config.type)) {
+					throw new TypeError(
+						`Number type must be either NUMBER or INTEGER. Received ${config.type}`,
+					);
+				}
+
+				chosenType = config.type;
 				break;
 			}
 
 			case type === User || type === GuildMember: {
-				result = 'USER';
+				chosenType = 'USER';
 				break;
 			}
 
 			// Catchall case for all types of guild channel
 			case type instanceof GuildChannel.constructor: {
-				result = 'CHANNEL';
+				chosenType = 'CHANNEL';
 				break;
 			}
 
 			default: {
-				throw new Error('Unsupported data type.');
+				throw new TypeError('Unsupported data type.');
 			}
+		}
+
+		if (config.type && chosenType !== config.type) {
+			throw new TypeError(
+				`Type mismatch. Found ${config.type} in the config, but inferred ${chosenType}!`,
+			);
 		}
 
 		addOption(target, {
 			name,
+			index,
 			config: {
 				...config,
-				type: result,
+				type: chosenType,
 			},
-			index,
 		});
 	};
 }
