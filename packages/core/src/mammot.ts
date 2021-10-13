@@ -1,14 +1,23 @@
-import {Client as DiscordClient, ClientOptions, Snowflake} from 'discord.js';
+import {
+	Client as DiscordClient,
+	ClientOptions,
+	Snowflake,
+	ClientUser,
+	ApplicationCommandDataResolvable,
+} from 'discord.js';
 import {OptionMetadata} from '.';
 import {Command, ConstructableCommand} from './command';
+import {MammotError} from './errots';
 import {readCommand} from './reflection';
 
 export interface MammotOptions extends ClientOptions {
 	developmentGuild: Snowflake;
+	ready(user: ClientUser): Promise<void> | void;
 }
 
 interface ParsedCommand {
 	name: string;
+	description: string;
 	command: Command;
 	options: OptionMetadata[];
 }
@@ -16,25 +25,38 @@ interface ParsedCommand {
 /**
  * The client for the bot.
  */
-export class Mammot<Ready extends boolean = boolean> {
+export class Mammot {
 	public static client(options: MammotOptions) {
-		return new Mammot<true>(options);
+		return new Mammot(options);
 	}
 
 	public readonly commands: Map<string, ParsedCommand> = new Map();
 
-	public readonly on;
-	public readonly off;
-
-	private readonly _client: DiscordClient<Ready>;
+	public readonly client: DiscordClient<true>;
 	private readonly developmentGuild;
 
 	private constructor(options: MammotOptions) {
-		const {developmentGuild, ...rest} = options;
+		const {developmentGuild, ready, ...rest} = options;
+		this.client = new DiscordClient(rest);
+
 		this.developmentGuild = developmentGuild;
-		this._client = new DiscordClient<Ready>(rest);
-		this.on = this._client.on;
-		this.off = this._client.off;
+		this.client.once('ready', async () => {
+			await ready(this.client.user);
+
+			await this.client.application.commands.set(
+				[...this.commands.values()].map(
+					(command): ApplicationCommandDataResolvable => ({
+						options: command.options.map(option => ({
+							type: option.config.type,
+							required: option.config.required,
+							description: option.config.description ?? 'no description',
+							name: option.name,
+						})),
+						name: command.name,
+					}),
+				),
+			);
+		});
 	}
 
 	/**
@@ -50,9 +72,10 @@ export class Mammot<Ready extends boolean = boolean> {
 		const mapped = commands.map(Cmd => new Cmd(this));
 
 		for (const command of mapped) {
-			const {name, options} = readCommand(command);
+			const {name, description, options} = readCommand(command);
 
 			this.commands.set(name, {
+				description,
 				name,
 				options,
 				command,
@@ -62,15 +85,8 @@ export class Mammot<Ready extends boolean = boolean> {
 		return this;
 	}
 
-	/**
-	 * Gets the client.
-	 */
-	public get client() {
-		return this._client;
-	}
-
 	public async login(token?: string) {
-		this.on('interaction', interaction => {
+		this.client.on('interaction', interaction => {
 			if (!interaction.isCommand()) {
 				return;
 			}
@@ -88,11 +104,19 @@ export class Mammot<Ready extends boolean = boolean> {
 					interaction,
 					...Command.resolveMetadata(interaction, options),
 				);
-			} catch {
-				// Lol
+			} catch (error: unknown) {
+				const message =
+					error instanceof MammotError
+						? error.message
+						: 'Something went wrong!';
+
+				void interaction.reply({
+					ephemeral: true,
+					content: message,
+				});
 			}
 		});
 
-		return this._client.login(token);
+		return this.client.login(token);
 	}
 }

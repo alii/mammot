@@ -1,9 +1,9 @@
 import {Command} from './command';
-import {OptionMetadata} from './decorators';
+import {CommandMetadata, OptionMetadata} from './decorators';
 
 export enum MetadataKey {
 	OPTION = 'mammot:option',
-	NAME = 'mammot:name',
+	COMMAND = 'mammot:command',
 }
 
 export function addOption(command: Command, metadata: OptionMetadata) {
@@ -28,17 +28,17 @@ export function readCommand(command: Command) {
 	}
 
 	// Read name from the constructor (read setName comments in this file)
-	const name = Reflect.getMetadata(MetadataKey.NAME, command.constructor) as
-		| string
+	const meta = Reflect.getMetadata(MetadataKey.COMMAND, command.constructor) as
+		| CommandMetadata
 		| undefined;
 
-	if (!name) {
+	if (!meta) {
 		throw new Error('No name found for command!');
 	}
 
 	return {
 		options,
-		name,
+		...meta,
 	};
 }
 
@@ -54,9 +54,12 @@ export function getParamType(command: Command, index: number, prop = 'run') {
 	return data[index];
 }
 
-// Command here is the constructor `Function` rather than an instance of the class,
-// so we cannot type this any further unfortunately.
-// eslint-disable-next-line @typescript-eslint/ban-types
-export function setName(command: Function, name: string) {
-	Reflect.defineMetadata(MetadataKey.NAME, name, command);
+export function setName(
+	// Command here is the constructor `Function` rather than an instance of the class,
+	// so we cannot type this any further unfortunately.
+	// eslint-disable-next-line @typescript-eslint/ban-types
+	command: Function,
+	data: CommandMetadata,
+) {
+	Reflect.defineMetadata(MetadataKey.COMMAND, data, command);
 }

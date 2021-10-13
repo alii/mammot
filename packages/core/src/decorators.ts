@@ -141,7 +141,12 @@ export function option(
 	};
 }
 
-export function name(val: string): ClassDecorator {
+export interface CommandMetadata {
+	name: string;
+	description: string;
+}
+
+export function name(val: string, description: string): ClassDecorator {
 	return target => {
 		const isCommand = target.prototype instanceof Command;
 
@@ -151,6 +156,6 @@ export function name(val: string): ClassDecorator {
 			);
 		}
 
-		setName(target, val);
+		setName(target, {name: val, description});
 	};
 }
