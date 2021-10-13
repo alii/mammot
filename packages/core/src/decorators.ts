@@ -4,6 +4,7 @@ import {
 	GuildMember,
 	User,
 } from 'discord.js';
+import {Except} from 'type-fest';
 import {Command} from './command';
 import {addOption, getParamType, setName} from './reflection';
 
@@ -37,9 +38,26 @@ export interface OptionMetadata {
 }
 
 /**
+ * A wrapper for @option that enables force mode on a type
+ * @param name The name of the option
+ * @param config The config for this option
+ * @returns A property decorator
+ */
+export function forced(
+	name: string,
+	config: Except<Partial<OptionConfig>, 'force'> = {},
+) {
+	return option(name, {
+		...config,
+		force: true,
+	});
+}
+
+/**
  * Build an option decorator
- * @param required If this option is required or not
- * @returns A decorator function that can be used to decorate an argument on the run method
+ * @param name The name of the option
+ * @param config The config for this option
+ * @returns A property decorator
  */
 export function option(
 	name: string,

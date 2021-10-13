@@ -17,7 +17,7 @@ export class Mammot<Ready extends boolean = boolean> {
 		return new Mammot<true>(options);
 	}
 
-	public readonly commands: ParsedCommand[] = [];
+	public readonly commands: Map<string, ParsedCommand> = new Map();
 
 	public readonly on;
 	public readonly off;
@@ -43,8 +43,11 @@ export class Mammot<Ready extends boolean = boolean> {
 		const mapped = commands.map(Cmd => new Cmd(this));
 
 		for (const command of mapped) {
-			this.commands.push({
-				...readCommand(command),
+			const {name, options} = readCommand(command);
+
+			this.commands.set(name, {
+				name,
+				options,
 				command,
 			});
 		}
@@ -65,9 +68,7 @@ export class Mammot<Ready extends boolean = boolean> {
 				return;
 			}
 
-			const found = this.commands.find(
-				command => command.name === interaction.commandName,
-			);
+			const found = this.commands.get(interaction.commandName);
 
 			if (!found) {
 				return;
@@ -75,10 +76,14 @@ export class Mammot<Ready extends boolean = boolean> {
 
 			const {command, options} = found;
 
-			void command.run(
-				interaction,
-				...Command.resolveMetadata(interaction, options),
-			);
+			try {
+				void command.run(
+					interaction,
+					...Command.resolveMetadata(interaction, options),
+				);
+			} catch {
+				// Lol
+			}
 		});
 
 		return this._client.login(token);

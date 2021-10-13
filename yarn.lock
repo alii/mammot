@@ -1337,6 +1337,7 @@ __metadata:
   dependencies:
     discord.js: ^13.2.0
     reflect-metadata: ^0.1.13
+    type-fest: ^2.5.0
   languageName: unknown
   linkType: soft
 
@@ -4799,6 +4800,13 @@ fsevents@~2.3.2:
   version: 1.4.0
   resolution: "type-fest@npm:1.4.0"
   checksum: b011c3388665b097ae6a109a437a04d6f61d81b7357f74cbcb02246f2f5bd72b888ae33631b99871388122ba0a87f4ff1c94078e7119ff22c70e52c0ff828201
+  languageName: node
+  linkType: hard
+
+"type-fest@npm:^2.5.0":
+  version: 2.5.0
+  resolution: "type-fest@npm:2.5.0"
+  checksum: 25fc675e276c8acec915c3166a07aea2f2e74b8c6b55a977ffa36477ff686309ba36a818cef48d03c66c8e1b8618d4a15bd00fc53bc4d571238ed4512cabb25e
   languageName: node
   linkType: hard
 
