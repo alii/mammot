@@ -29,6 +29,6 @@ class MyCommand extends Command {
 	}
 }
 
-void mammot.addCommands([MyCommand]);
+void mammot.addCommands([MyCommand]).login(process.env.DISCORD_TOKEN);
 
 Mammot.debugCommands(mammot.commands);

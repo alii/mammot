@@ -3,8 +3,6 @@ import {
 	ClientOptions,
 	Snowflake,
 	ClientUser,
-	ApplicationCommandDataResolvable,
-	ApplicationCommandOptionData,
 } from 'discord.js';
 import {inspect} from 'util';
 import {OptionMetadata} from './decorators';
@@ -61,22 +59,16 @@ export class Mammot {
 		this.developmentGuild = developmentGuild;
 
 		const mapped = [...this.commands.values()].map(command => {
-			const options = command.options.map(option => {
-				const value: ApplicationCommandOptionData = {
-					...option.config,
-					name: option.name,
-				};
+			const options = command.options.map(option => ({
+				...option.config,
+				name: option.name,
+			}));
 
-				return value;
-			});
-
-			const result: ApplicationCommandDataResolvable = {
+			return {
 				options,
 				name: command.name,
 				description: command.description,
 			};
-
-			return result;
 		});
 
 		this.client.once('ready', async () => {
