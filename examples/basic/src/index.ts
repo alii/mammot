@@ -4,6 +4,7 @@ import {CommandInteraction, VoiceChannel, User} from 'discord.js';
 
 const mammot = Mammot.client({
 	intents: [],
+	developmentGuild: '1234567890',
 });
 
 @name('ratio')

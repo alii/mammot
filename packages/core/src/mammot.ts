@@ -1,7 +1,11 @@
-import {Client as DiscordClient, ClientOptions} from 'discord.js';
+import {Client as DiscordClient, ClientOptions, Snowflake} from 'discord.js';
 import {OptionMetadata} from '.';
 import {Command, ConstructableCommand} from './command';
 import {readCommand} from './reflection';
+
+export interface MammotOptions extends ClientOptions {
+	developmentGuild: Snowflake;
+}
 
 interface ParsedCommand {
 	name: string;
@@ -13,7 +17,7 @@ interface ParsedCommand {
  * The client for the bot.
  */
 export class Mammot<Ready extends boolean = boolean> {
-	public static client(options: ClientOptions) {
+	public static client(options: MammotOptions) {
 		return new Mammot<true>(options);
 	}
 
@@ -23,9 +27,12 @@ export class Mammot<Ready extends boolean = boolean> {
 	public readonly off;
 
 	private readonly _client: DiscordClient<Ready>;
+	private readonly developmentGuild;
 
-	private constructor(options: ClientOptions) {
-		this._client = new DiscordClient<Ready>(options);
+	private constructor(options: MammotOptions) {
+		const {developmentGuild, ...rest} = options;
+		this.developmentGuild = developmentGuild;
+		this._client = new DiscordClient<Ready>(rest);
 		this.on = this._client.on;
 		this.off = this._client.off;
 	}
