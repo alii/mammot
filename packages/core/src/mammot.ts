@@ -7,7 +7,7 @@ import {
 import {inspect} from 'util';
 import {OptionMetadata} from './decorators';
 import {Command, ConstructableCommand} from './command';
-import {MammotError} from './errots';
+import {MammotError} from './errors';
 import {readCommand} from './reflection';
 
 export interface MammotOptions extends ClientOptions {

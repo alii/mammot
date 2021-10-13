@@ -3,3 +3,4 @@ export * from './mammot';
 export * from './command';
 export * from './decorators';
 export * from './reflection';
+export * from './errors';
