@@ -1,5 +1,4 @@
 import {
-	ApplicationCommandOption,
 	ApplicationCommandOptionData,
 	GuildChannel,
 	GuildMember,
@@ -15,7 +14,9 @@ type OptionMetadataTypes = Exclude<
 	`SUB_${string}`
 >;
 
-export type OptionConfig = ApplicationCommandOption & {
+export interface OptionMetadata {
+	name: string;
+	index: number;
 	/**
 	 * Some types like MENTIONABLE cannot be inferred
 	 * however they will throw a TypeError mismatch when used.
@@ -26,14 +27,13 @@ export type OptionConfig = ApplicationCommandOption & {
 	 * @warning
 	 */
 	force?: boolean;
-};
-
-export interface OptionMetadata {
-	name: string;
-	index: number;
-	// Mark .type as required
-	config: Partial<OptionConfig> & Pick<OptionConfig, 'type'>;
+	config: Except<ApplicationCommandOptionData, 'name'>;
 }
+
+type OptionConfig = Except<
+	Except<ApplicationCommandOptionData, 'name'> & Pick<OptionMetadata, 'force'>,
+	'type'
+> & {type?: ApplicationCommandOptionData['type']};
 
 /**
  * A wrapper for @option that enables force mode on a type
@@ -41,18 +41,12 @@ export interface OptionMetadata {
  * @param config The config for this option
  * @returns A property decorator
  */
-export function forced(
-	name: string,
-	config: Except<Partial<OptionConfig>, 'force'> = {},
-) {
-	return option(name, {
-		...config,
-		force: true,
-	});
+export function forced(name: string, config: OptionConfig) {
+	return option(name, {...config, force: true});
 }
 
-function isNumOrInt(val: string): val is 'NUMBER' | 'INTEGER' {
-	return ['NUMBER', 'INTEGER'].includes(val);
+function isNumOrInt(val: unknown): val is 'NUMBER' | 'INTEGER' {
+	return typeof val === 'string' && ['NUMBER', 'INTEGER'].includes(val);
 }
 
 /**
@@ -61,10 +55,7 @@ function isNumOrInt(val: string): val is 'NUMBER' | 'INTEGER' {
  * @param config The config for this option
  * @returns A property decorator
  */
-export function option(
-	name: string,
-	config: Partial<OptionConfig> = {},
-): ParameterDecorator {
+export function option(name: string, config: OptionConfig): ParameterDecorator {
 	return (target, property, index) => {
 		if (property !== 'run') {
 			throw new Error(

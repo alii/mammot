@@ -62,10 +62,7 @@ export class Mammot {
 		const mapped = [...this.commands.values()].map(command => {
 			const options = command.options.map(option => {
 				const value: ApplicationCommandOptionData = {
-					type: option.config.type,
-					required: option.config.required,
-					description: option.config.description ?? 'no description',
-					choices: option.config.choices,
+					...option.config,
 					name: option.name,
 				};
 

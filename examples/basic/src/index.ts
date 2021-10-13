@@ -15,13 +15,13 @@ class MyCommand extends Command {
 	public async run(
 		interaction: CommandInteraction,
 
-		@option('role')
+		@option('role', {description: ''})
 		role: Role,
 
-		@option('user')
+		@option('user', {description: 'The user'})
 		user: User,
 
-		@option('age', {type: 'INTEGER'})
+		@option('age', {description: 'an age', type: 'INTEGER'})
 		age: number,
 	) {
 		console.log({role, user, age});
