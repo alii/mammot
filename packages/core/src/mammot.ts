@@ -41,32 +41,34 @@ export class Mammot {
 		this.client = new DiscordClient(rest);
 
 		this.developmentGuild = developmentGuild;
+
+		const mapped = [...this.commands.values()].map(command => {
+			const options = command.options.map(option => {
+				const value: ApplicationCommandOptionData = {
+					type: option.config.type,
+					required: option.config.required,
+					description: option.config.description ?? 'no description',
+					choices: option.config.choices,
+					name: option.name,
+				};
+
+				return value;
+			});
+
+			const result: ApplicationCommandDataResolvable = {
+				options,
+				name: command.name,
+				description: command.description,
+			};
+
+			return result;
+		});
+
 		this.client.once('ready', async () => {
+			await this.client.application.commands.set(mapped);
+
+			// Alert user that we are ready
 			await ready(this.client.user);
-
-			await this.client.application.commands.set(
-				[...this.commands.values()].map(command => {
-					const options = command.options.map(option => {
-						const value: ApplicationCommandOptionData = {
-							type: option.config.type,
-							required: option.config.required,
-							description: option.config.description ?? 'no description',
-							choices: option.config.choices,
-							name: option.name,
-						};
-
-						return value;
-					});
-
-					const result: ApplicationCommandDataResolvable = {
-						options,
-						name: command.name,
-						description: command.description,
-					};
-
-					return result;
-				}),
-			);
 		});
 	}
 
