@@ -6,5 +6,12 @@
 	"repository": "https://github.com/alii/mammot",
 	"author": "Alistair Smith <hi@alistair.sh>",
 	"description": "Discord bot Slash Command framework for TypeScript",
-	"version": "0.0.1"
+	"version": "0.0.1",
+	"keywords": [
+		"discord",
+		"bot",
+		"framework",
+		"typescript",
+		"slash-commands"
+	]
 }

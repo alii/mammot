@@ -44,5 +44,12 @@
 	},
 	"homepage": "https://github.com/alii/mammot",
 	"repository": "https://github.com/alii/mammot",
-	"description": "Discord bot Slash Command framework for TypeScript"
+	"description": "Discord bot Slash Command framework for TypeScript",
+	"keywords": [
+		"discord",
+		"bot",
+		"framework",
+		"typescript",
+		"slash-commands"
+	]
 }
