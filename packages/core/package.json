@@ -1,0 +1,6 @@
+{
+	"name": "@reflect/core",
+	"packageManager": "yarn@3.0.2",
+	"main": "dist/reflect-core.cjs.js",
+	"module": "dist/reflect-core.esm.js"
+}
