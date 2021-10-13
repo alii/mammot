@@ -7,5 +7,8 @@
 		"discord.js": "^13.2.0",
 		"reflect-metadata": "^0.1.13",
 		"type-fest": "^2.5.0"
-	}
+	},
+	"homepage": "https://github.com/alii/mammot",
+	"license": "MIT",
+	"repository": "https://github.com/alii/mammot"
 }

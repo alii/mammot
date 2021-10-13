@@ -40,5 +40,7 @@
 		"packages": [
 			"./packages/**"
 		]
-	}
+	},
+	"homepage": "https://github.com/alii/mammot",
+	"repository": "https://github.com/alii/mammot"
 }
