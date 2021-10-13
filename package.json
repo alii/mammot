@@ -13,10 +13,14 @@
 		"@typescript-eslint/parser": "^5.0.0",
 		"eslint": "^8.0.0",
 		"eslint-config-marine": "^9.0.6",
+		"eslint-config-react-hooks": "^1.0.0",
 		"eslint-config-xo": "^0.39.0",
 		"eslint-config-xo-react": "^0.25.0",
 		"eslint-config-xo-typescript": "^0.45.2",
+		"eslint-plugin-react": "^7.26.1",
+		"eslint-plugin-react-hooks": "^4.2.0",
 		"prettier": "^2.4.1",
+		"semver": "^7.3.5",
 		"typescript": "^4.4.4"
 	},
 	"scripts": {

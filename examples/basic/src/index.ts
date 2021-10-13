@@ -15,7 +15,7 @@ class MyCommand extends Command {
 	public async run(
 		interaction: CommandInteraction,
 
-		@option('role', {description: ''})
+		@option('role', {description: 'dsadas'})
 		role: Role,
 
 		@option('user', {description: 'The user'})

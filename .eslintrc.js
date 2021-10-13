@@ -4,10 +4,10 @@ module.exports = {
 		'marine/node',
 		'eslint:recommended',
 		'plugin:@typescript-eslint/recommended',
+		'marine/react',
 		'xo',
 		'xo-typescript',
 		'xo-react',
-		'marine/react',
 	],
 	rules: {
 		'@typescript-eslint/no-implied-eval': 'off',

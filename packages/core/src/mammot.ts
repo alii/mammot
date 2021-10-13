@@ -28,8 +28,9 @@ interface ParsedCommand {
  * The client for the bot.
  */
 export class Mammot {
-	public static client(options: MammotOptions) {
-		return new Mammot(options);
+	public static client(options: MammotOptions & {dev?: boolean}) {
+		const {dev = process.env.NODE_ENV === 'development', ...rest} = options;
+		return new Mammot(rest, dev);
 	}
 
 	public static debugCommands(commands: Mammot['commands']) {
@@ -53,7 +54,7 @@ export class Mammot {
 	public readonly client: DiscordClient<true>;
 	private readonly developmentGuild;
 
-	private constructor(options: MammotOptions) {
+	private constructor(options: MammotOptions, isDev: boolean) {
 		const {developmentGuild, ready, ...rest} = options;
 		this.client = new DiscordClient(rest);
 
