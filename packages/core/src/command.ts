@@ -60,8 +60,16 @@ export abstract class Command {
 			}
 		}
 
-		// Reverse because for some reason they are in the wrong order
-		return results.reverse();
+		// Map null values to undefined to make optional
+		// values undefined rather than null to maintain
+		// type-safety
+		return results.map(value => {
+			if (value === null) {
+				return undefined;
+			}
+
+			return value;
+		});
 	}
 
 	protected readonly mammot: Mammot;
