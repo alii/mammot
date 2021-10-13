@@ -24,8 +24,7 @@ class MyCommand extends Command {
 		@option('age', {description: 'an age', type: 'INTEGER'})
 		age: number,
 	) {
-		console.log({role, user, age});
-		await interaction.reply('pog');
+		await interaction.reply(JSON.stringify({role, user, age}));
 	}
 }
 

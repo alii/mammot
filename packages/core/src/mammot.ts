@@ -125,6 +125,10 @@ export class Mammot {
 						? error.message
 						: 'Something went wrong!';
 
+				if (!(error instanceof MammotError)) {
+					console.warn(error);
+				}
+
 				void interaction.reply({
 					ephemeral: true,
 					content: message,
