@@ -1,5 +1,5 @@
 import {
-	ApplicationCommandOptionChoice,
+	ApplicationCommandOption,
 	ApplicationCommandOptionData,
 	GuildChannel,
 	GuildMember,
@@ -15,12 +15,7 @@ type OptionMetadataTypes = Exclude<
 	`SUB_${string}`
 >;
 
-export interface OptionConfig {
-	required: boolean;
-	description: string;
-	type: OptionMetadataTypes;
-	choices?: ApplicationCommandOptionChoice[];
-
+export type OptionConfig = ApplicationCommandOption & {
 	/**
 	 * Some types like MENTIONABLE cannot be inferred
 	 * however they will throw a TypeError mismatch when used.
@@ -31,7 +26,7 @@ export interface OptionConfig {
 	 * @warning
 	 */
 	force?: boolean;
-}
+};
 
 export interface OptionMetadata {
 	name: string;
@@ -54,6 +49,10 @@ export function forced(
 		...config,
 		force: true,
 	});
+}
+
+function isNumOrInt(val: string): val is 'NUMBER' | 'INTEGER' {
+	return ['NUMBER', 'INTEGER'].includes(val);
 }
 
 /**
@@ -101,7 +100,7 @@ export function option(
 					);
 				}
 
-				if (!['NUMBER', 'INTEGER'].includes(config.type)) {
+				if (!isNumOrInt(config.type)) {
 					throw new TypeError(
 						`Number type must be either NUMBER or INTEGER. Received ${config.type}`,
 					);

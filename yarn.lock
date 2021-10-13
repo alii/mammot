@@ -1341,6 +1341,12 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@mammot/docs@workspace:docs":
+  version: 0.0.0-use.local
+  resolution: "@mammot/docs@workspace:docs"
+  languageName: unknown
+  linkType: soft
+
 "@mammot/example-basic@workspace:examples/basic":
   version: 0.0.0-use.local
   resolution: "@mammot/example-basic@workspace:examples/basic"
@@ -2514,6 +2520,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"eslint-config-xo-react@npm:^0.25.0":
+  version: 0.25.0
+  resolution: "eslint-config-xo-react@npm:0.25.0"
+  peerDependencies:
+    eslint: ">=7"
+    eslint-plugin-react: ">=7.22.0"
+    eslint-plugin-react-hooks: ">=4.2.0"
+  checksum: 14edd921d06077f864842d2d7a0b4bb2e4e5a9b2b7f76c778e5138330eb692f9068474a8593040930ffdae1beaf5092b3977767fc3d74c951bf2eb3667812223
+  languageName: node
+  linkType: hard
+
 "eslint-config-xo-typescript@npm:^0.45.2":
   version: 0.45.2
   resolution: "eslint-config-xo-typescript@npm:0.45.2"
@@ -3516,6 +3533,7 @@ fsevents@~2.3.2:
     eslint: ^8.0.0
     eslint-config-marine: ^9.0.6
     eslint-config-xo: ^0.39.0
+    eslint-config-xo-react: ^0.25.0
     eslint-config-xo-typescript: ^0.45.2
     prettier: ^2.4.1
     typescript: ^4.4.4
