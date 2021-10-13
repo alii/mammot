@@ -12,6 +12,7 @@ import {readCommand} from './reflection';
 
 export interface MammotOptions extends ClientOptions {
 	developmentGuild: Snowflake;
+	fallbackError?: string;
 	ready(user: ClientUser): Promise<void> | void;
 }
 
@@ -51,14 +52,16 @@ export class Mammot {
 	public readonly client: DiscordClient<true>;
 
 	private readonly developmentGuildId: Snowflake;
+	private readonly fallbackError: string;
 	private readonly options;
 
 	private constructor(options: MammotOptions, private readonly isDev: boolean) {
-		const {developmentGuild, ready, ...rest} = options;
+		const {developmentGuild, fallbackError, ready, ...rest} = options;
 
 		this.options = options;
 		this.client = new DiscordClient(rest);
 		this.developmentGuildId = developmentGuild;
+		this.fallbackError = fallbackError!;
 	}
 
 	/**
@@ -120,10 +123,15 @@ export class Mammot {
 					...Command.resolveMetadata(interaction, options),
 				);
 			} catch (error: unknown) {
-				const message =
-					error instanceof MammotError
-						? error.message
-						: 'Something went wrong!';
+				let message: string;
+
+				if (error instanceof MammotError) {
+					message = error.message;
+				} else if (this.fallbackError) {
+					message = this.fallbackError;
+				} else {
+					message = 'Something went wrong.';
+				}
 
 				if (!(error instanceof MammotError)) {
 					console.warn(error);
