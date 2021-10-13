@@ -1,12 +1,12 @@
 import {CommandInteraction} from 'discord.js';
-import {Client} from './client';
-import {GetConstructorArgs} from './utils';
+import {Mammot} from './mammot';
+import {GetAbstractConstructorArgs} from './utils';
 
 export abstract class Command {
-	protected readonly client: Client;
+	protected readonly mammot: Mammot;
 
-	public constructor(client: Client) {
-		this.client = client;
+	public constructor(mammot: Mammot) {
+		this.mammot = mammot;
 	}
 
 	public abstract run(
@@ -16,5 +16,5 @@ export abstract class Command {
 }
 
 export type ConstructableCommand = new (
-	...args: GetConstructorArgs<typeof Command>
+	...args: GetAbstractConstructorArgs<typeof Command>
 ) => Command;

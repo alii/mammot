@@ -1,5 +1,5 @@
 {
-	"name": "@reflect/example-basic",
+	"name": "@mammot/example-basic",
 	"packageManager": "yarn@3.0.2",
 	"devDependencies": {
 		"ts-node": "^10.3.0",

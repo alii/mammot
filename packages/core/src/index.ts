@@ -1,4 +1,4 @@
 import 'reflect-metadata';
-export * from './client';
+export * from './mammot';
 export * from './command';
 export * from './decorators';

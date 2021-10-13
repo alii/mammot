@@ -1331,6 +1331,24 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@mammot/core@workspace:packages/core":
+  version: 0.0.0-use.local
+  resolution: "@mammot/core@workspace:packages/core"
+  dependencies:
+    discord.js: ^13.2.0
+    reflect-metadata: ^0.1.13
+  languageName: unknown
+  linkType: soft
+
+"@mammot/example-basic@workspace:examples/basic":
+  version: 0.0.0-use.local
+  resolution: "@mammot/example-basic@workspace:examples/basic"
+  dependencies:
+    ts-node: ^10.3.0
+    typescript: ^4.4.4
+  languageName: unknown
+  linkType: soft
+
 "@nodelib/fs.scandir@npm:2.1.5":
   version: 2.1.5
   resolution: "@nodelib/fs.scandir@npm:2.1.5"
@@ -1436,23 +1454,6 @@ __metadata:
   checksum: 5043b0d8a09d370f955b713d350fa01d3f4d9a6f2c8a88019ba239d584981e6610e6eda75fb235aab00839afd23ded6bfcfdc0a492d73e697bd58b3cf2bc534e
   languageName: node
   linkType: hard
-
-"@reflect/core@workspace:packages/core":
-  version: 0.0.0-use.local
-  resolution: "@reflect/core@workspace:packages/core"
-  dependencies:
-    reflect-metadata: ^0.1.13
-  languageName: unknown
-  linkType: soft
-
-"@reflect/example-basic@workspace:examples/basic":
-  version: 0.0.0-use.local
-  resolution: "@reflect/example-basic@workspace:examples/basic"
-  dependencies:
-    ts-node: ^10.3.0
-    typescript: ^4.4.4
-  languageName: unknown
-  linkType: soft
 
 "@rollup/plugin-alias@npm:^3.1.1":
   version: 3.1.5
@@ -3493,6 +3494,25 @@ fsevents@~2.3.2:
   languageName: node
   linkType: hard
 
+"mammot@workspace:.":
+  version: 0.0.0-use.local
+  resolution: "mammot@workspace:."
+  dependencies:
+    "@babel/core": ^7.15.8
+    "@babel/preset-env": ^7.15.8
+    "@babel/preset-typescript": ^7.15.0
+    "@preconstruct/cli": ^2.1.5
+    "@typescript-eslint/eslint-plugin": ^5.0.0
+    "@typescript-eslint/parser": ^5.0.0
+    eslint: ^8.0.0
+    eslint-config-marine: ^9.0.6
+    eslint-config-xo: ^0.39.0
+    eslint-config-xo-typescript: ^0.45.2
+    prettier: ^2.4.1
+    typescript: ^4.4.4
+  languageName: unknown
+  linkType: soft
+
 "map-obj@npm:^1.0.0":
   version: 1.0.1
   resolution: "map-obj@npm:1.0.1"
@@ -4148,26 +4168,6 @@ fsevents@~2.3.2:
   checksum: 798d379a7b6f6455501145419505c97dd11cbc23857a386add2b9ef15963ccf15a48d9d15507afe01d4cd74116df8a213247200bac00320bd7c11ddeaa5e8fb4
   languageName: node
   linkType: hard
-
-"reflect@workspace:.":
-  version: 0.0.0-use.local
-  resolution: "reflect@workspace:."
-  dependencies:
-    "@babel/core": ^7.15.8
-    "@babel/preset-env": ^7.15.8
-    "@babel/preset-typescript": ^7.15.0
-    "@preconstruct/cli": ^2.1.5
-    "@typescript-eslint/eslint-plugin": ^5.0.0
-    "@typescript-eslint/parser": ^5.0.0
-    discord.js: ^13.2.0
-    eslint: ^8.0.0
-    eslint-config-marine: ^9.0.6
-    eslint-config-xo: ^0.39.0
-    eslint-config-xo-typescript: ^0.45.2
-    prettier: ^2.4.1
-    typescript: ^4.4.4
-  languageName: unknown
-  linkType: soft
 
 "regenerate-unicode-properties@npm:^9.0.0":
   version: 9.0.0

@@ -5,12 +5,22 @@ import {MetadataKey} from './reflection';
 /**
  * The client for the bot.
  */
-export class Client {
-	public readonly commands: Command[] = [];
-	private readonly _client: DiscordClient<true>;
+export class Mammot<Ready extends boolean = boolean> {
+	public static client(options: ClientOptions) {
+		return new Mammot<true>(options);
+	}
 
-	public constructor(options: ClientOptions) {
-		this._client = new DiscordClient(options);
+	public readonly commands: Command[] = [];
+
+	public readonly on;
+	public readonly off;
+
+	private readonly _client: DiscordClient<Ready>;
+
+	private constructor(options: ClientOptions) {
+		this._client = new DiscordClient<Ready>(options);
+		this.on = this._client.on;
+		this.off = this._client.off;
 	}
 
 	/**
@@ -43,5 +53,9 @@ export class Client {
 	 */
 	public get client() {
 		return this._client;
+	}
+
+	public async login(token?: string) {
+		return this._client.login(token);
 	}
 }

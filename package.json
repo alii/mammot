@@ -1,5 +1,5 @@
 {
-	"name": "reflect",
+	"name": "mammot",
 	"private": true,
 	"version": "1.0.0",
 	"author": "Alistair Smith <hi@alistair.sh>",
@@ -21,7 +21,8 @@
 	"scripts": {
 		"dev": "preconstruct dev",
 		"build": "preconstruct build",
-		"example": "yarn workspace @reflect/example-basic start"
+		"example": "yarn workspace @mammot/example-basic start",
+		"tc": "tsc --noEmit"
 	},
 	"packageManager": "yarn@3.0.2",
 	"workspaces": [
@@ -32,8 +33,5 @@
 		"packages": [
 			"./packages/**"
 		]
-	},
-	"dependencies": {
-		"discord.js": "^13.2.0"
 	}
 }

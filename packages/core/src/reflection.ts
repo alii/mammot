@@ -17,12 +17,14 @@ export function addOption(command: Command, metadata: OptionMetadata) {
 	);
 }
 
-export function getParamType(command: Command, index: number): unknown {
-	const data = Reflect.getMetadata('design:paramtypes', command, 'run');
+export function getParamType(command: Command, index: number) {
+	const data = Reflect.getMetadata('design:paramtypes', command, 'run') as
+		| unknown[]
+		| undefined;
 
 	if (!data) {
 		throw new Error(`Could not get reflection types for ${Command.name}`);
 	}
 
-	return data[index] as unknown;
+	return data[index];
 }

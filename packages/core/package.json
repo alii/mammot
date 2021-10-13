@@ -1,9 +1,10 @@
 {
-	"name": "@reflect/core",
+	"name": "@mammot/core",
 	"packageManager": "yarn@3.0.2",
-	"main": "dist/reflect-core.cjs.js",
-	"module": "dist/reflect-core.esm.js",
+	"main": "dist/mammot-core.cjs.js",
+	"module": "dist/mammot-core.esm.js",
 	"dependencies": {
+		"discord.js": "^13.2.0",
 		"reflect-metadata": "^0.1.13"
 	}
 }
