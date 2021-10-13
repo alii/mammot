@@ -11,8 +11,7 @@ class MyCommand extends Command {
 		interaction: CommandInteraction,
 		@option('channel') channel: VoiceChannel,
 		@option('user') user: User,
-		@option('age', {type: 'INTEGER'})
-		age: string,
+		@option('age', {type: 'INTEGER'}) age: number,
 	): Promise<void> {
 		await setTimeout(3000);
 		console.log({channel, user, age});
