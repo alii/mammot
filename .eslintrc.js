@@ -8,5 +8,6 @@ module.exports = {
 	],
 	rules: {
 		'@typescript-eslint/no-implied-eval': 'off',
+		'operator-linebreak': 'off',
 	},
 };

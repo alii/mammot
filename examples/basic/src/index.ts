@@ -1,5 +1,5 @@
 import {Mammot, Command, option} from '@mammot/core';
-import {CommandInteraction, VoiceChannel} from 'discord.js';
+import {CommandInteraction, VoiceChannel, User} from 'discord.js';
 import {setTimeout} from 'timers/promises';
 
 const mammot = Mammot.client({
@@ -10,10 +10,11 @@ class MyCommand extends Command {
 	public async run(
 		interaction: CommandInteraction,
 		@option() name: string,
-		@option() age: VoiceChannel,
+		@option() channel: VoiceChannel,
+		@option() user: User,
 	): Promise<void> {
 		await setTimeout(3000);
-		console.log({name, age});
+		console.log({name, channel, user});
 	}
 }
 

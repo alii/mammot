@@ -1,4 +1,4 @@
-import {GuildChannel} from 'discord.js';
+import {GuildChannel, GuildMember, User} from 'discord.js';
 import {Command} from './command';
 import {addOption, getParamType} from './reflection';
 
@@ -10,7 +10,7 @@ export interface OptionConfig {
 export interface OptionMetadata {
 	config: Partial<OptionConfig>;
 	index: number;
-	type: 'STRING' | 'INTEGER' | 'CHANNEl';
+	type: 'STRING' | 'INTEGER' | 'CHANNEL' | 'MEMBER';
 }
 
 /**
@@ -34,7 +34,8 @@ export function option(config: Partial<OptionConfig> = {}): ParameterDecorator {
 
 		const type = getParamType(target, index);
 
-		let result;
+		let result: OptionMetadata['type'];
+
 		switch (true) {
 			case type === String: {
 				result = 'STRING' as const;
@@ -46,6 +47,12 @@ export function option(config: Partial<OptionConfig> = {}): ParameterDecorator {
 				break;
 			}
 
+			case type === GuildMember || type === User: {
+				result = 'MEMBER' as const;
+				break;
+			}
+
+			// Catchall case for all types of guild channel
 			case type instanceof GuildChannel.constructor: {
 				result = 'CHANNEL' as const;
 				break;

@@ -1,4 +1,5 @@
 import {Client as DiscordClient, ClientOptions} from 'discord.js';
+import {OptionMetadata} from '.';
 import {Command, ConstructableCommand} from './command';
 import {MetadataKey} from './reflection';
 
@@ -37,12 +38,15 @@ export class Mammot<Ready extends boolean = boolean> {
 		this.commands.push(...mapped);
 
 		for (const command of mapped) {
-			const metadata = Reflect.getMetadata(
-				MetadataKey.OPTION,
-				command,
-			) as unknown;
+			const metadata = Reflect.getMetadata(MetadataKey.OPTION, command) as
+				| OptionMetadata[]
+				| undefined;
 
-			console.log(metadata);
+			if (!metadata) {
+				throw new Error('No metadata found on Command!');
+			}
+
+			console.log(metadata.reverse());
 		}
 
 		return this;
