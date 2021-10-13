@@ -5,7 +5,7 @@ import {
 	User,
 } from 'discord.js';
 import {Command} from './command';
-import {addOption, getParamType} from './reflection';
+import {addOption, getParamType, setName} from './reflection';
 
 type OptionMetadataTypes = Extract<
 	ApplicationCommandOptionData['type'],
@@ -120,5 +120,19 @@ export function option(
 				type: chosenType,
 			},
 		});
+	};
+}
+
+export function name(val: string): ClassDecorator {
+	return target => {
+		const isCommand = target.prototype instanceof Command;
+
+		if (!isCommand) {
+			throw new TypeError(
+				'You can only use @name() on a class that extends Command!',
+			);
+		}
+
+		setName(target, val);
 	};
 }

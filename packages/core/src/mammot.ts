@@ -1,7 +1,13 @@
 import {Client as DiscordClient, ClientOptions} from 'discord.js';
 import {OptionMetadata} from '.';
 import {Command, ConstructableCommand} from './command';
-import {MetadataKey} from './reflection';
+import {readCommand} from './reflection';
+
+interface ParsedCommand {
+	name: string;
+	command: Command;
+	options: OptionMetadata[];
+}
 
 /**
  * The client for the bot.
@@ -11,7 +17,7 @@ export class Mammot<Ready extends boolean = boolean> {
 		return new Mammot<true>(options);
 	}
 
-	public readonly commands: Command[] = [];
+	public readonly commands: ParsedCommand[] = [];
 
 	public readonly on;
 	public readonly off;
@@ -35,18 +41,12 @@ export class Mammot<Ready extends boolean = boolean> {
 		T extends readonly [V, ...V[]],
 	>(commands: T) {
 		const mapped = commands.map(Cmd => new Cmd(this));
-		this.commands.push(...mapped);
 
 		for (const command of mapped) {
-			const metadata = Reflect.getMetadata(MetadataKey.OPTION, command) as
-				| OptionMetadata[]
-				| undefined;
-
-			if (!metadata) {
-				throw new Error('No metadata found on Command!');
-			}
-
-			console.log(metadata.reverse());
+			this.commands.push({
+				...readCommand(command),
+				command,
+			});
 		}
 
 		return this;
@@ -60,6 +60,27 @@ export class Mammot<Ready extends boolean = boolean> {
 	}
 
 	public async login(token?: string) {
+		this.on('interaction', interaction => {
+			if (!interaction.isCommand()) {
+				return;
+			}
+
+			const found = this.commands.find(
+				command => command.name === interaction.commandName,
+			);
+
+			if (!found) {
+				return;
+			}
+
+			const {command, options} = found;
+
+			void command.run(
+				interaction,
+				...Command.resolveMetadata(interaction, options),
+			);
+		});
+
 		return this._client.login(token);
 	}
 }

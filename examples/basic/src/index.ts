@@ -1,11 +1,12 @@
 import 'dotenv/config';
-import {Mammot, Command, option} from '@mammot/core';
+import {Mammot, Command, option, name} from '@mammot/core';
 import {CommandInteraction, VoiceChannel, User} from 'discord.js';
 
 const mammot = Mammot.client({
 	intents: [],
 });
 
+@name('ratio')
 class MyCommand extends Command {
 	public async run(
 		interaction: CommandInteraction,
@@ -19,3 +20,5 @@ class MyCommand extends Command {
 }
 
 void mammot.addCommands([MyCommand]);
+
+console.log(mammot.commands);
