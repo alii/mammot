@@ -1,0 +1,10 @@
+{
+	"name": "@reflect/example-basic",
+	"packageManager": "yarn@3.0.2",
+	"devDependencies": {
+		"ts-node": "^10.3.0"
+	},
+	"scripts": {
+		"start": "yarn ts-node --transpile-only ./src/index.ts"
+	}
+}

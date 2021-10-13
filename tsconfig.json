@@ -13,7 +13,9 @@
 		"isolatedModules": true,
 		"noEmit": true,
 		"jsx": "react",
-		"noFallthroughCasesInSwitch": true
+		"noFallthroughCasesInSwitch": true,
+		"experimentalDecorators": true,
+		"emitDecoratorMetadata": true
 	},
 	"exclude": ["node_modules", "dist"],
 	"include": ["./**/*.ts", "./**/*.tsx"]

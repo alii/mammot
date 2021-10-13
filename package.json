@@ -9,17 +9,24 @@
 		"@babel/preset-env": "^7.15.8",
 		"@babel/preset-typescript": "^7.15.0",
 		"@preconstruct/cli": "^2.1.5",
+		"@typescript-eslint/eslint-plugin": "^5.0.0",
+		"@typescript-eslint/parser": "^5.0.0",
 		"eslint": "^8.0.0",
+		"eslint-config-marine": "^9.0.6",
+		"eslint-config-xo": "^0.39.0",
+		"eslint-config-xo-typescript": "^0.45.2",
 		"prettier": "^2.4.1",
 		"typescript": "^4.4.4"
 	},
 	"scripts": {
 		"dev": "preconstruct dev",
-		"build": "preconstruct build"
+		"build": "preconstruct build",
+		"example": "yarn workspace @reflect/example-basic start"
 	},
 	"packageManager": "yarn@3.0.2",
 	"workspaces": [
-		"./packages/**"
+		"./packages/**",
+		"./examples/**"
 	],
 	"preconstruct": {
 		"packages": [
