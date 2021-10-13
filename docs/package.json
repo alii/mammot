@@ -3,5 +3,7 @@
 	"packageManager": "yarn@3.0.2",
 	"homepage": "https://github.com/alii/mammot",
 	"license": "MIT",
-	"repository": "https://github.com/alii/mammot"
+	"repository": "https://github.com/alii/mammot",
+	"author": "Alistair Smith <hi@alistair.sh>",
+	"description": "Discord bot Slash Command framework for TypeScript"
 }
