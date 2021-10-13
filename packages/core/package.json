@@ -3,7 +3,7 @@
 	"packageManager": "yarn@3.0.2",
 	"main": "dist/mammot-core.cjs.js",
 	"module": "dist/mammot-core.esm.js",
-	"types": "dist/declarations/index.d.ts",
+	"typings": "dist/mammot-core.cjs.d.ts",
 	"dependencies": {
 		"discord.js": "^13.2.0",
 		"reflect-metadata": "^0.1.13",
@@ -13,5 +13,14 @@
 	"license": "MIT",
 	"repository": "https://github.com/alii/mammot",
 	"author": "Alistair Smith <hi@alistair.sh>",
-	"description": "Discord bot Slash Command framework for TypeScript"
+	"description": "Discord bot Slash Command framework for TypeScript",
+	"files": [
+		"dist",
+		"package.json",
+		"README.md"
+	],
+	"version": "0.0.1",
+	"publishConfig": {
+		"access": "public"
+	}
 }
