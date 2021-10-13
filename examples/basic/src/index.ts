@@ -26,11 +26,19 @@ class MyCommand extends Command {
 		@option('role', {description: 'dsadas'})
 		role?: Role,
 
-		@option('age', {description: 'an age', type: 'INTEGER'})
-		age?: number,
+		@option('amount', {
+			description: 'Amount of times to ratio',
+			type: 'INTEGER',
+		})
+		amount?: number,
 	) {
-		await user.fetch();
-		await interaction.reply(JSON.stringify({role, user, age}));
+		await interaction.channel?.send(`<@${user.id}> get ratioeddd`);
+		await interaction.reply({
+			ephemeral: true,
+			content: `Other data: ${amount ?? 'no amount'}, ${
+				role?.name ?? 'no role'
+			}`,
+		});
 	}
 }
 
