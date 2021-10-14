@@ -72,5 +72,4 @@ class Ratio extends Command {
 	}
 }
 
-void mammot.login(process.env.DISCORD_TOKEN);
-void mammot.addCommands([Ratio]);
+void mammot..addCommands([Ratio]).login(process.env.DISCORD_TOKEN);
