@@ -1,8 +1,9 @@
 import {GuildChannel, GuildMember, Role, User} from 'discord.js';
+import {Except} from 'type-fest';
 import {Command} from '../command';
 import {addOption, getParamType} from '../reflection';
 import {OptionConfig, OptionMetadataTypes} from '../types';
-import {isNumOrInt} from '../util';
+import {is} from '../util';
 
 /**
  * A wrapper for @option that enables force mode on a type
@@ -10,7 +11,7 @@ import {isNumOrInt} from '../util';
  * @param config The config for this option
  * @returns A property decorator
  */
-export function forced(name: string, config: OptionConfig) {
+export function forced(name: string, config: Except<OptionConfig, 'force'>) {
 	return option(name, {
 		...config,
 		force: true,
@@ -37,11 +38,26 @@ export function option(name: string, config: OptionConfig): ParameterDecorator {
 			);
 		}
 
+		if (config.type === 'MENTIONABLE' && !config.force) {
+			throw new TypeError(
+				'You have manually set the type to MENTIONABLE, but force mode is not on! This will cause errors.',
+			);
+		}
+
 		const type = getParamType(target, index);
 
 		let chosenType: OptionMetadataTypes;
 
 		switch (true) {
+			case config.force: {
+				if (!config.type) {
+					throw new Error('Cannot use force mode without specifying a type');
+				}
+
+				chosenType = config.type;
+				break;
+			}
+
 			case type === String: {
 				chosenType = 'STRING';
 				break;
@@ -59,7 +75,7 @@ export function option(name: string, config: OptionConfig): ParameterDecorator {
 					);
 				}
 
-				if (!isNumOrInt(config.type)) {
+				if (!is(config.type, ['NUMBER', 'INTEGER'])) {
 					throw new TypeError(
 						`Number type must be either NUMBER or INTEGER. Received ${config.type}`,
 					);

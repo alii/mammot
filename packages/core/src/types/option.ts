@@ -26,4 +26,4 @@ export interface OptionMetadata {
 export type OptionConfig = Except<
 	Except<ApplicationCommandOptionData, 'name'> & Pick<OptionMetadata, 'force'>,
 	'type'
-> & {type?: ApplicationCommandOptionData['type']};
+> & {type?: OptionMetadataTypes};

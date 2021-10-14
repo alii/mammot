@@ -1,6 +1,14 @@
 import 'dotenv/config';
-import {Command, config, Mammot, MammotError, option} from '@mammot/core';
-import {CommandInteraction, Intents, Role, User} from 'discord.js';
+import {
+	Command,
+	config,
+	Mammot,
+	MammotError,
+	option,
+	forced,
+	Mentionable,
+} from '@mammot/core';
+import {CommandInteraction, Intents, User} from 'discord.js';
 import {green} from 'colorette';
 
 const mammot = Mammot.client({
@@ -10,10 +18,16 @@ const mammot = Mammot.client({
 		Intents.FLAGS.GUILD_MEMBERS,
 	],
 	developmentGuild: process.env.DEVELOPMENT_GUILD_ID!,
+	async onError(interaction, error) {
+		console.warn(error);
+		return Promise.resolve('Something went wrong!');
+	},
 	onReady(user) {
 		console.log(green('ready -'), `Logged into client as ${user.username}`);
 	},
 });
+
+const codeblock = (v: string) => `\`\`\`${v}\`\`\``;
 
 @config('ratio', {description: 'Command will ratio somebody'})
 class Ratio extends Command {
@@ -21,14 +35,22 @@ class Ratio extends Command {
 		interaction: CommandInteraction,
 
 		// Required arguments go before optional arguments
-		@option('user', {description: 'The user', required: true})
+		@option('user', {
+			description: 'The user to ratio',
+			required: true,
+		})
 		user: User,
 
-		@option('role', {description: 'dsadas'})
-		role?: Role,
+		@forced('mention', {
+			description: 'Just a placeholder value',
+			type: 'MENTIONABLE',
+			required: true,
+		})
+		mention: Mentionable,
 
+		// Optional values can safely use the ? operator in `param?: type`
 		@option('amount', {
-			description: 'Amount of times to ratio',
+			description: 'Another placeholder value',
 			type: 'INTEGER',
 		})
 		amount?: number,
@@ -42,11 +64,10 @@ class Ratio extends Command {
 		}
 
 		await interaction.channel?.send(`<@${user.id}> get ratioeddd`);
+
 		await interaction.reply({
 			ephemeral: true,
-			content: `Other data: ${amount ?? 'no amount'}, ${
-				role?.name ?? 'no role'
-			}`,
+			content: codeblock(JSON.stringify({amount, mention}, null, 2)),
 		});
 	}
 }

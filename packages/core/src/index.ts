@@ -5,3 +5,4 @@ export * from './command';
 export * from './decorators';
 export * from './reflection';
 export * from './errors';
+export * from './types/mentionable';
