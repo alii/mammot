@@ -5,7 +5,7 @@ import {
 	ClientUser,
 } from 'discord.js';
 import {inspect} from 'util';
-import {OptionMetadata} from './decorators';
+import {OptionMetadata} from './types';
 import {Command, ConstructableCommand} from './command';
 import {MammotError} from './errors';
 import {readCommand} from './reflection';

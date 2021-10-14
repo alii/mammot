@@ -1,54 +1,8 @@
-import {
-	ApplicationCommandOptionData,
-	GuildChannel,
-	GuildMember,
-	Role,
-	User,
-} from 'discord.js';
-import {Except} from 'type-fest';
-import {Command} from './command';
-import {addOption, getParamType, addCommandData} from './reflection';
-
-type OptionMetadataTypes = Exclude<
-	Extract<ApplicationCommandOptionData['type'], string>,
-	`SUB_${string}`
->;
-
-export interface OptionMetadata {
-	name: string;
-	index: number;
-	/**
-	 * Some types like MENTIONABLE cannot be inferred
-	 * however they will throw a TypeError mismatch when used.
-	 *
-	 * By enabling this flag, you will be able to force these
-	 * option types and not have the error thrown.
-	 *
-	 * @warning
-	 */
-	force?: boolean;
-	config: Except<ApplicationCommandOptionData, 'name'>;
-}
-
-type OptionConfig = Except<
-	Except<ApplicationCommandOptionData, 'name'> & Pick<OptionMetadata, 'force'>,
-	'type'
-> & {type?: ApplicationCommandOptionData['type']};
-
-/**
- * A wrapper for @option that enables force mode on a type
- * @param name The name of the option
- * @param config The config for this option
- * @returns A property decorator
- */
-export function forced(name: string, config: OptionConfig) {
-	return option(name, {...config, force: true});
-}
-
-function isNumOrInt(val: unknown): val is 'NUMBER' | 'INTEGER' {
-	return typeof val === 'string' && ['NUMBER', 'INTEGER'].includes(val);
-}
-
+import {GuildChannel, GuildMember, Role, User} from 'discord.js';
+import {Command} from '../command';
+import {addOption, getParamType} from '../reflection';
+import {OptionConfig, OptionMetadataTypes} from '../types';
+import {isNumOrInt} from '../lib/isNumorInt';
 /**
  * Build an option decorator
  * @param name The name of the option
@@ -135,34 +89,6 @@ export function option(name: string, config: OptionConfig): ParameterDecorator {
 				...config,
 				type: chosenType,
 			},
-		});
-	};
-}
-
-export interface CommandMetadata {
-	name: string;
-	description: string;
-	defaultPermission?: boolean;
-}
-
-export function data(
-	name: string,
-	description: string,
-	config: Partial<Except<CommandMetadata, 'name' | 'description'>> = {},
-): ClassDecorator {
-	return target => {
-		const isCommand = target.prototype instanceof Command;
-
-		if (!isCommand) {
-			throw new TypeError(
-				'You can only use @name() on a class that extends Command!',
-			);
-		}
-
-		addCommandData(target, {
-			name,
-			description,
-			...config,
 		});
 	};
 }

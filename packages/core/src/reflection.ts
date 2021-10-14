@@ -1,5 +1,5 @@
 import {Command} from './command';
-import {CommandMetadata, OptionMetadata} from './decorators';
+import {CommandMetadata, OptionMetadata} from './types';
 
 export enum MetadataKey {
 	OPTION = 'mammot:option',

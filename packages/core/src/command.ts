@@ -1,7 +1,6 @@
 import {CommandInteraction} from 'discord.js';
-import {OptionMetadata} from './decorators';
+import {OptionMetadata, GetAbstractConstructorArgs} from './types';
 import {Mammot} from './mammot';
-import {GetAbstractConstructorArgs} from './utils';
 
 export abstract class Command {
 	public static resolveMetadata(
