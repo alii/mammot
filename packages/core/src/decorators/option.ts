@@ -58,6 +58,12 @@ export function option(name: string, config: OptionConfig): ParameterDecorator {
 				break;
 			}
 
+			case type === Object: {
+				throw new Error(
+					'Type cannot be inferred! You may need to enable force mode and specify the type manually.',
+				);
+			}
+
 			case type === String: {
 				chosenType = 'STRING';
 				break;
