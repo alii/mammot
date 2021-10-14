@@ -1,8 +1,8 @@
 import {
 	Client as DiscordClient,
 	ClientOptions,
-	Snowflake,
 	ClientUser,
+	Snowflake,
 } from 'discord.js';
 import {inspect} from 'util';
 import {OptionMetadata} from './types';
@@ -13,6 +13,7 @@ import {readCommand} from './reflection';
 export interface MammotOptions extends ClientOptions {
 	developmentGuild: Snowflake;
 	fallbackError?: string;
+
 	ready(user: ClientUser): Promise<void> | void;
 }
 
@@ -50,7 +51,6 @@ export class Mammot {
 
 	public readonly commands: Map<string, ParsedCommand> = new Map();
 	public readonly client: DiscordClient<true>;
-
 	private readonly developmentGuildId: Snowflake;
 	private readonly fallbackError: string;
 	private readonly options;
