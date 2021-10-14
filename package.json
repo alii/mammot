@@ -28,6 +28,7 @@
 		"build": "preconstruct build",
 		"example": "yarn workspace @mammot/example-basic start",
 		"tc": "tsc --noEmit",
+		"eslint": "eslint '**/*.{ts,tsx}'",
 		"prepublish": "yarn build",
 		"fix": "yarn constraints --fix"
 	},
