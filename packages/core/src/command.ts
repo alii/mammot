@@ -13,6 +13,8 @@ export abstract class Command {
 		interaction: CommandInteraction,
 		metadatum: OptionMetadata[],
 	) {
+		// Technically, this shouldn't happen as this check
+		// runs in mammot.ts too
 		if (metadatum.length + 1 !== this.run.length) {
 			throw new Error(
 				`You have too many arguments in the ${
