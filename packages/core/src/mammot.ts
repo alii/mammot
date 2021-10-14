@@ -6,11 +6,13 @@ import {
 	Snowflake,
 } from 'discord.js';
 import {inspect} from 'util';
+import fs from 'fs';
+import path from 'path';
 import {CommandMetadata, OptionMetadata} from './types';
 import {Command, ConstructableCommand} from './command';
 import {MammotError} from './errors';
 import {readCommand} from './reflection';
-import {StandardEmbed} from './structs/standard-embed';
+import {StandardEmbed} from './types/structs/standard-embed';
 
 export interface MammotOptions extends ClientOptions {
 	developmentGuild: Snowflake;
@@ -58,6 +60,20 @@ export class Mammot {
 		);
 
 		console.log(result);
+	}
+
+	/**
+	 * Loads a command from a seperate directory
+	 * @param commands Commands to load from that directory.
+	 * @returns The client
+	 */
+	public static async loadCommands() {
+		const files = fs.readdirSync(path.join(__dirname, ''));
+		await files.forEach(async (file: string) => {
+			if (file.endsWith('ts')) {
+				const command: Command = (await import(path.join(__dirname, 'impl', file))).default;
+			}
+		}
 	}
 
 	public readonly commands: Map<string, ParsedCommand> = new Map();
