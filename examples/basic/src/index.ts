@@ -1,5 +1,5 @@
 import 'dotenv/config';
-import {Mammot, Command, option, data} from '@mammot/core';
+import {Mammot, Command, option, config} from '@mammot/core';
 import {CommandInteraction, Role, User, Intents} from 'discord.js';
 import {green} from 'colorette';
 
@@ -11,12 +11,12 @@ const mammot = Mammot.client({
 	],
 	developmentGuild: process.env.DEVELOPMENT_GUILD_ID!,
 	ready(user) {
-		console.log(green('ready - '), `Logged into client as ${user.username}`);
+		console.log(green('ready -'), `Logged into client as ${user.username}`);
 	},
 });
 
-@data('ratio', 'Command will ratio somebody')
-class MyCommand extends Command {
+@config('ratio', {description: 'Command will ratio somebody'})
+class Ratio extends Command {
 	public async run(
 		interaction: CommandInteraction,
 
@@ -43,4 +43,4 @@ class MyCommand extends Command {
 	}
 }
 
-void mammot.addCommands([MyCommand]).login(process.env.DISCORD_TOKEN);
+void mammot.addCommands([Ratio]).login(process.env.DISCORD_TOKEN);

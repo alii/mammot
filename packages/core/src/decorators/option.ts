@@ -2,7 +2,18 @@ import {GuildChannel, GuildMember, Role, User} from 'discord.js';
 import {Command} from '../command';
 import {addOption, getParamType} from '../reflection';
 import {OptionConfig, OptionMetadataTypes} from '../types';
-import {isNumOrInt} from '../lib/isNumorInt';
+import {isNumOrInt} from '../util';
+
+/**
+ * A wrapper for @option that enables force mode on a type
+ * @param name The name of the option
+ * @param config The config for this option
+ * @returns A property decorator
+ */
+export function forced(name: string, config: OptionConfig) {
+	return option(name, {...config, force: true});
+}
+
 /**
  * Build an option decorator
  * @param name The name of the option

@@ -109,7 +109,7 @@ export class Mammot {
 			};
 		});
 
-		this.client.on('interactionCreate', interaction => {
+		this.client.on('interactionCreate', async interaction => {
 			if (!interaction.isCommand()) {
 				return;
 			}
@@ -123,7 +123,7 @@ export class Mammot {
 			const {command, options} = found;
 
 			try {
-				void command.run(
+				await command.run(
 					interaction,
 					...Command.resolveMetadata(interaction, options),
 				);

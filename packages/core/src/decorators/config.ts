@@ -3,10 +3,15 @@ import {Command} from '../command';
 import {addCommandData} from '../reflection';
 import {CommandMetadata} from '../types';
 
-export function data(
+/**
+ * Provides metadata for a command's config
+ * @param name Name of this command
+ * @param config Config for the command
+ * @returns A class decorator
+ */
+export function config(
 	name: string,
-	description: string,
-	config: Partial<Except<CommandMetadata, 'name' | 'description'>> = {},
+	config: Except<CommandMetadata, 'name'>,
 ): ClassDecorator {
 	return target => {
 		const isCommand = target.prototype instanceof Command;
@@ -17,10 +22,11 @@ export function data(
 			);
 		}
 
-		addCommandData(target, {
+		const metadata: CommandMetadata = {
 			name,
-			description,
 			...config,
-		});
+		};
+
+		addCommandData(target, metadata);
 	};
 }
