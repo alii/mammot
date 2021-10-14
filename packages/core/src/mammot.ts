@@ -6,7 +6,7 @@ import {
 	Snowflake,
 } from 'discord.js';
 import {inspect} from 'util';
-import {OptionMetadata} from './types';
+import {CommandMetadata, OptionMetadata} from './types';
 import {Command, ConstructableCommand} from './command';
 import {MammotError} from './errors';
 import {readCommand} from './reflection';
@@ -29,8 +29,7 @@ export interface MammotOptions extends ClientOptions {
 	): Promise<string | null>;
 }
 
-interface ParsedCommand {
-	name: string;
+interface ParsedCommand extends CommandMetadata {
 	description: string;
 	command: Command;
 	options: OptionMetadata[];
@@ -83,24 +82,19 @@ export class Mammot {
 		const mapped = commands.map(Cmd => new Cmd(this));
 
 		for (const command of mapped) {
-			const {name, description, options} = readCommand(command);
+			const {name, ...config} = readCommand(command);
 
-			if (options.length + 1 !== command.run.length) {
+			if (config.options.length + 1 !== command.run.length) {
 				throw new Error(
 					`Found too many arguments in the ${
 						command.constructor.name
-					} command. Expected ${options.length + 1} but found ${
+					} command. Expected ${config.options.length + 1} but found ${
 						command.run.length
 					} instead.`,
 				);
 			}
 
-			this.commands.set(name, {
-				description,
-				name,
-				options,
-				command,
-			});
+			this.commands.set(name, {name, command, ...config});
 		}
 
 		return this;
@@ -136,9 +130,24 @@ export class Mammot {
 				return;
 			}
 
-			const {command, options} = found;
+			const {command, options, ...rest} = found;
 
 			try {
+				for (const inhibitor of rest.inhibitors ?? []) {
+					let allowed = true;
+
+					if (typeof inhibitor === 'string') {
+						allowed = Boolean(interaction.memberPermissions?.has(inhibitor));
+					} else {
+						// eslint-disable-next-line no-await-in-loop
+						allowed = await inhibitor(interaction);
+					}
+
+					if (!allowed) {
+						throw new Error('You do not have permission to run this command!');
+					}
+				}
+
 				await command.run(
 					interaction,
 					...command.resolveMetadata(interaction, options),
