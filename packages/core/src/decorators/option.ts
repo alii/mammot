@@ -11,7 +11,10 @@ import {isNumOrInt} from '../util';
  * @returns A property decorator
  */
 export function forced(name: string, config: OptionConfig) {
-	return option(name, {...config, force: true});
+	return option(name, {
+		...config,
+		force: true,
+	});
 }
 
 /**

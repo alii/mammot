@@ -1,6 +1,6 @@
 import 'dotenv/config';
-import {Mammot, Command, option, config} from '@mammot/core';
-import {CommandInteraction, Role, User, Intents} from 'discord.js';
+import {Command, config, Mammot, MammotError, option} from '@mammot/core';
+import {CommandInteraction, Intents, Role, User} from 'discord.js';
 import {green} from 'colorette';
 
 const mammot = Mammot.client({
@@ -33,6 +33,14 @@ class Ratio extends Command {
 		})
 		amount?: number,
 	) {
+		if (Math.random() > 0.8) {
+			// Demonstration of throwing errors
+			// this error will be displayed to the user as it is as MammotError.
+			// errors that are *not* MammotError will not have their message
+			// displayed to the user.
+			throw new MammotError('Something went wrong! Oops..');
+		}
+
 		await interaction.channel?.send(`<@${user.id}> get ratioeddd`);
 		await interaction.reply({
 			ephemeral: true,

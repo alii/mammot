@@ -1,5 +1,5 @@
 import {CommandInteraction} from 'discord.js';
-import {OptionMetadata, GetAbstractConstructorArgs} from './types';
+import {GetAbstractConstructorArgs, OptionMetadata} from './types';
 import {Mammot} from './mammot';
 
 export abstract class Command {
