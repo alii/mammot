@@ -42,7 +42,7 @@ interface ParsedCommand {
 export class Mammot {
 	public static client(options: MammotOptions & {dev?: boolean}) {
 		const {dev = process.env.NODE_ENV === 'development', ...rest} = options;
-		return new Mammot(rest, dev);
+		return new Mammot(rest, dev, false);
 	}
 
 	public static debugCommands(commands: Mammot['commands']) {
@@ -65,7 +65,11 @@ export class Mammot {
 	public readonly client: DiscordClient<true>;
 	private readonly options;
 
-	private constructor(options: MammotOptions, private readonly isDev: boolean) {
+	private constructor(
+		options: MammotOptions,
+		private readonly isDev: boolean,
+		private hasStartedLogin: boolean,
+	) {
 		this.options = options;
 		this.client = new DiscordClient(options);
 	}
@@ -82,28 +86,32 @@ export class Mammot {
 	>(commands: T) {
 		const mapped = commands.map(Cmd => new Cmd(this));
 
-		for (const command of mapped) {
-			const {name, description, options} = readCommand(command);
+		if (this.hasStartedLogin) {
+			throw new MammotError('Cannot add commands after login');
+		} else {
+			for (const command of mapped) {
+				const {name, description, options} = readCommand(command);
 
-			if (options.length + 1 !== command.run.length) {
-				throw new Error(
-					`Found too many arguments in the ${
-						command.constructor.name
-					} command. Expected ${options.length + 1} but found ${
-						command.run.length
-					} instead.`,
-				);
+				if (options.length + 1 !== command.run.length) {
+					throw new Error(
+						`Found too many arguments in the ${
+							command.constructor.name
+						} command. Expected ${options.length + 1} but found ${
+							command.run.length
+						} instead.`,
+					);
+				}
+
+				this.commands.set(name, {
+					description,
+					name,
+					options,
+					command,
+				});
 			}
 
-			this.commands.set(name, {
-				description,
-				name,
-				options,
-				command,
-			});
+			return this;
 		}
-
-		return this;
 	}
 
 	/**
@@ -188,6 +196,7 @@ export class Mammot {
 			await this.options.onReady?.(this.client.user);
 		});
 
+		this.hasStartedLogin = true;
 		return this.client.login(token);
 	}
 }
