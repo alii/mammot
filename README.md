@@ -7,3 +7,5 @@
 For a basic example, see [./examples/basic/src/index.ts](https://github.com/alii/mammot/blob/master/examples/basic/src/index.ts).
 
 Documentation will be written up soon :)
+
+test
