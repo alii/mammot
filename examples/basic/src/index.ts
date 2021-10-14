@@ -1,6 +1,7 @@
 import 'dotenv/config';
 import {Mammot, Command, option, data} from '@mammot/core';
 import {CommandInteraction, Role, User, Intents} from 'discord.js';
+import {green} from 'colorette';
 
 const mammot = Mammot.client({
 	intents: [
@@ -10,7 +11,7 @@ const mammot = Mammot.client({
 	],
 	developmentGuild: process.env.DEVELOPMENT_GUILD_ID!,
 	ready(user) {
-		console.log(`Ready as ${user.username}`);
+		console.log(green('ready - '), `Logged into client as ${user.username}`);
 	},
 });
 

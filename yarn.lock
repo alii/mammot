@@ -1351,6 +1351,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@mammot/example-basic@workspace:examples/basic"
   dependencies:
+    colorette: ^2.0.16
     dotenv: ^10.0.0
     ts-node: ^10.3.0
     typescript: ^4.4.4
@@ -2210,6 +2211,13 @@ __metadata:
   version: 1.1.4
   resolution: "color-name@npm:1.1.4"
   checksum: b0445859521eb4021cd0fb0cc1a75cecf67fceecae89b63f62b201cca8d345baf8b952c966862a9d9a2632987d4f6581f0ec8d957dfacece86f0a7919316f610
+  languageName: node
+  linkType: hard
+
+"colorette@npm:^2.0.16":
+  version: 2.0.16
+  resolution: "colorette@npm:2.0.16"
+  checksum: cd55596a3a2d1071c1a28eee7fd8a5387593ff1bd10a3e8d0a6221499311fe34a9f2b9272d77c391e0e003dcdc8934fb2f8d106e7ef1f7516f8060c901d41a27
   languageName: node
   linkType: hard
 
