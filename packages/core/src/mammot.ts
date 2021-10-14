@@ -41,7 +41,7 @@ interface ParsedCommand extends CommandMetadata {
 export class Mammot {
 	public static client(options: MammotOptions & {dev?: boolean}) {
 		const {dev = process.env.NODE_ENV === 'development', ...rest} = options;
-		return new Mammot(rest, dev);
+		return new Mammot(rest, dev, false);
 	}
 
 	public static debugCommands(commands: Mammot['commands']) {
@@ -64,7 +64,11 @@ export class Mammot {
 	public readonly client: DiscordClient<true>;
 	private readonly options;
 
-	private constructor(options: MammotOptions, private readonly isDev: boolean) {
+	private constructor(
+		options: MammotOptions,
+		private readonly isDev: boolean,
+		private hasStartedLogin: boolean,
+	) {
 		this.options = options;
 		this.client = new DiscordClient(options);
 	}
@@ -80,6 +84,10 @@ export class Mammot {
 		T extends readonly [V, ...V[]],
 	>(commands: T) {
 		const mapped = commands.map(Cmd => new Cmd(this));
+
+		if (this.hasStartedLogin) {
+			throw new MammotError('Cannot add commands after login');
+		}
 
 		for (const command of mapped) {
 			const {name, ...config} = readCommand(command);
@@ -197,6 +205,7 @@ export class Mammot {
 			await this.options.onReady?.(this.client.user);
 		});
 
+		this.hasStartedLogin = true;
 		return this.client.login(token);
 	}
 }

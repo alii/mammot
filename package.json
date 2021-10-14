@@ -52,5 +52,8 @@
 		"framework",
 		"typescript",
 		"slash-commands"
-	]
+	],
+	"dependencies": {
+		"colorette": "^2.0.16"
+	}
 }
