@@ -1,0 +1,21 @@
+name: tsc & eslint check
+
+'on':
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  tsc_eslint_check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Installing the dependencies
+        run: yarn install
+      - name: Run build
+        run: yarn build
+      - name: Run the tsc and eslint
+        run: yarn tc && yarn eslint
