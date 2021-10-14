@@ -10,7 +10,7 @@ const mammot = Mammot.client({
 		Intents.FLAGS.GUILD_MEMBERS,
 	],
 	developmentGuild: process.env.DEVELOPMENT_GUILD_ID!,
-	ready(user) {
+	onReady(user) {
 		console.log(green('ready -'), `Logged into client as ${user.username}`);
 	},
 });
