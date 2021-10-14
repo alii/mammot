@@ -2,6 +2,7 @@ import {
 	Client as DiscordClient,
 	ClientOptions,
 	ClientUser,
+	CommandInteraction,
 	Snowflake,
 } from 'discord.js';
 import {inspect} from 'util';
@@ -9,12 +10,23 @@ import {OptionMetadata} from './types';
 import {Command, ConstructableCommand} from './command';
 import {MammotError} from './errors';
 import {readCommand} from './reflection';
+import {StandardEmbed} from './structs/standard-embed';
 
 export interface MammotOptions extends ClientOptions {
 	developmentGuild: Snowflake;
-	fallbackError?: string;
 
-	ready(user: ClientUser): Promise<void> | void;
+	onReady?(user: ClientUser): Promise<void> | void;
+
+	/**
+	 * Method that returns either a string to reply to the interaction as, or null meaning that
+	 * the error message was handled in this method
+	 * @param interaction The command interaction
+	 * @param error The error that was thrown
+	 */
+	onError?(
+		interaction: CommandInteraction,
+		error: unknown,
+	): Promise<string | null>;
 }
 
 interface ParsedCommand {
@@ -51,17 +63,11 @@ export class Mammot {
 
 	public readonly commands: Map<string, ParsedCommand> = new Map();
 	public readonly client: DiscordClient<true>;
-	private readonly developmentGuildId: Snowflake;
-	private readonly fallbackError: string;
 	private readonly options;
 
 	private constructor(options: MammotOptions, private readonly isDev: boolean) {
-		const {developmentGuild, fallbackError, ready, ...rest} = options;
-
 		this.options = options;
-		this.client = new DiscordClient(rest);
-		this.developmentGuildId = developmentGuild;
-		this.fallbackError = fallbackError!;
+		this.client = new DiscordClient(options);
 	}
 
 	/**
@@ -128,23 +134,32 @@ export class Mammot {
 					...Command.resolveMetadata(interaction, options),
 				);
 			} catch (error: unknown) {
-				let message: string;
+				let message;
 
-				if (error instanceof MammotError) {
+				if (this.options.onError) {
+					const value = await this.options.onError(interaction, error);
+
+					if (value) {
+						message = value;
+					} else {
+						return;
+					}
+				} else if (error instanceof MammotError) {
 					message = error.message;
-				} else if (this.fallbackError) {
-					message = this.fallbackError;
-				} else {
-					message = 'Something went wrong.';
 				}
+
+				message ??= 'Something went wrong.';
 
 				if (!(error instanceof MammotError)) {
 					console.warn(error);
 				}
 
+				const embed = await new StandardEmbed(interaction.user).build();
+				embed.setDescription(message);
+
 				void interaction.reply({
 					ephemeral: true,
-					content: message,
+					embeds: [embed],
 				});
 			}
 		});
@@ -153,14 +168,14 @@ export class Mammot {
 			if (this.isDev) {
 				await this.client.application.commands.set(
 					mapped,
-					this.developmentGuildId,
+					this.options.developmentGuild,
 				);
 			} else {
 				await this.client.application.commands.set(mapped);
 			}
 
 			// Alert user that we are ready
-			await this.options.ready(this.client.user);
+			await this.options.onReady?.(this.client.user);
 		});
 
 		return this.client.login(token);
