@@ -6,4 +6,4 @@
 
 For a basic example, see [./examples/basic/src/index.ts](https://github.com/alii/mammot/blob/master/examples/basic/src/index.ts).
 
-Documentation will be written up soon :)
+Simple documentation is available in our [Discord server](https://discord.com/invite/rbpcNQwZdD). Eventually we will have a site with documentation listed.
