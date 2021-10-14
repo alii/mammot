@@ -3,10 +3,28 @@ import {GetAbstractConstructorArgs, OptionMetadata} from './types';
 import {Mammot} from './mammot';
 
 export abstract class Command {
-	public static resolveMetadata(
+	protected readonly mammot: Mammot;
+
+	public constructor(mammot: Mammot) {
+		this.mammot = mammot;
+	}
+
+	public resolveMetadata(
 		interaction: CommandInteraction,
 		metadatum: OptionMetadata[],
 	) {
+		if (metadatum.length + 1 !== this.run.length) {
+			throw new Error(
+				`You have too many arguments in the ${
+					this.constructor.name
+				} command. Found ${
+					this.run.length
+				} arguments defined in the .run method but expected ${
+					metadatum.length + 1
+				} (${metadatum.length} options).`,
+			);
+		}
+
 		const results: unknown[] = [];
 
 		for (const metadata of metadatum) {
@@ -69,12 +87,6 @@ export abstract class Command {
 
 			return value;
 		});
-	}
-
-	protected readonly mammot: Mammot;
-
-	public constructor(mammot: Mammot) {
-		this.mammot = mammot;
 	}
 
 	public abstract run(

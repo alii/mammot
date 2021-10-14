@@ -85,6 +85,16 @@ export class Mammot {
 		for (const command of mapped) {
 			const {name, description, options} = readCommand(command);
 
+			if (options.length + 1 !== command.run.length) {
+				throw new Error(
+					`Found too many arguments in the ${
+						command.constructor.name
+					} command. Expected ${options.length + 1} but found ${
+						command.run.length
+					} instead.`,
+				);
+			}
+
 			this.commands.set(name, {
 				description,
 				name,
@@ -131,7 +141,7 @@ export class Mammot {
 			try {
 				await command.run(
 					interaction,
-					...Command.resolveMetadata(interaction, options),
+					...command.resolveMetadata(interaction, options),
 				);
 			} catch (error: unknown) {
 				let message;
