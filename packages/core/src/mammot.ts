@@ -158,10 +158,8 @@ export class Mammot {
 					}
 				}
 
-				await command.run(
-					interaction,
-					...command.resolveMetadata(interaction, options),
-				);
+				const parameters = await command.resolveOptions(interaction, options);
+				await command.run(interaction, ...parameters);
 			} catch (error: unknown) {
 				let message;
 
