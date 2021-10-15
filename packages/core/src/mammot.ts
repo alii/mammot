@@ -152,7 +152,9 @@ export class Mammot {
 					}
 
 					if (!allowed) {
-						throw new Error('You do not have permission to run this command!');
+						throw new MammotError(
+							'You do not have permission to run this command!',
+						);
 					}
 				}
 
