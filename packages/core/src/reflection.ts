@@ -19,13 +19,8 @@ export function addOption(command: Command, metadata: OptionMetadata) {
 }
 
 export function readCommand(command: Command) {
-	const options = Reflect.getMetadata(MetadataKey.OPTION, command) as
-		| OptionMetadata[]
-		| undefined;
-
-	if (!options) {
-		throw new Error('No options metadata found on Command!');
-	}
+	const options = (Reflect.getMetadata(MetadataKey.OPTION, command) ?? []) as
+		| OptionMetadata[];
 
 	// Read name from the constructor (read setName comments in this file)
 	const meta = Reflect.getMetadata(MetadataKey.COMMAND, command.constructor) as
