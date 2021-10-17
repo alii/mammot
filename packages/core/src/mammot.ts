@@ -123,7 +123,7 @@ export class Mammot {
 
 			files.forEach(async file => {
 				const cmdName = parse(file).name;
-				const fn = resolve(process.cwd(), 'src', commands, file);
+				const fn = resolve(rootData(), commands, file);
 				const command = (await import(fn)).default as unknown as Command;
 
 				const {name = cmdName, ...config} = readCommand(command);
