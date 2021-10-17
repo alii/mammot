@@ -90,19 +90,7 @@ export class Mammot {
 			}
 
 			for (const command of mapped) {
-				const {name, ...config} = readCommand(command);
-
-				if (config.options.length + 1 !== command.run.length) {
-					throw new Error(
-						`Found too many arguments in the ${
-							command.constructor.name
-						} command. Expected ${config.options.length + 1} but found ${
-							command.run.length
-						} instead.`,
-					);
-				}
-
-				this.commands.set(name, {name, command, ...config});
+				this.addCommandSafe(command);
 			}
 		} else {
 			const extensions = ['.js', '.cjs', '.mjs', '.ts', '.tsx'];
@@ -112,8 +100,9 @@ export class Mammot {
 				throw new MammotError(`${directory} is not a directory`);
 			}
 
-			const files: string[] = readdirSync(directory).filter(file =>
-				extensions.includes(extname(file)));
+			const files = readdirSync(directory).filter(file =>
+				extensions.includes(extname(file)),
+			);
 
 			console.log(
 				`Successfully loaded ${files.length} ${
@@ -122,23 +111,9 @@ export class Mammot {
 			);
 
 			files.forEach(async file => {
-				const cmdName = parse(file).name;
 				const fn = resolve(rootData(), commands, file);
 				const command = (await import(fn)).default as unknown as Command;
-
-				const {name = cmdName, ...config} = readCommand(command);
-
-				if (config.options.length + 1 !== command.run.length) {
-					throw new Error(
-						`Found too many arguments in the ${
-							command.constructor.name
-						} command. Expected ${config.options.length + 1} but found ${
-							command.run.length
-						} instead.`,
-					);
-				}
-
-				this.commands.set(name, {name, command, ...config});
+				this.addCommandSafe(command);
 			});
 		}
 
@@ -244,5 +219,21 @@ export class Mammot {
 
 		this.hasStartedLogin = true;
 		return this.client.login(token);
+	}
+
+	private addCommandSafe(command: Command) {
+		const {name, ...config} = readCommand(command);
+
+		if (config.options.length + 1 !== command.run.length) {
+			throw new Error(
+				`Found too many arguments in the ${
+					command.constructor.name
+				} command. Expected ${config.options.length + 1} but found ${
+					command.run.length
+				} instead.`,
+			);
+		}
+
+		this.commands.set(name, {name, command, ...config});
 	}
 }
