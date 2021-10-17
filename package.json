@@ -26,7 +26,7 @@
 	"scripts": {
 		"dev": "preconstruct dev",
 		"build": "preconstruct build",
-		"example": "yarn workspace @mammot/example-basic start",
+		"example": "yarn workspace @mammot/$0 start",
 		"tc": "tsc --noEmit",
 		"eslint": "eslint '**/*.{ts,tsx}'",
 		"prepublish": "yarn build",

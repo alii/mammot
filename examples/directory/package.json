@@ -1,0 +1,30 @@
+{
+	"name": "@mammot/example-directory",
+	"packageManager": "yarn@3.0.2",
+	"main": "src/index.ts",
+	"devDependencies": {
+		"ts-node": "^10.3.0",
+		"typescript": "^4.4.4"
+	},
+	"scripts": {
+		"start": "yarn ts-node --transpile-only ./src/index.ts",
+		"build": "tsc"
+	},
+	"dependencies": {
+		"colorette": "^2.0.16",
+		"dotenv": "^10.0.0"
+	},
+	"homepage": "https://github.com/alii/mammot",
+	"license": "MIT",
+	"repository": "https://github.com/alii/mammot",
+	"author": "Alistair Smith <hi@alistair.sh>",
+	"description": "Discord bot Slash Command framework for TypeScript",
+	"version": "0.0.7",
+	"keywords": [
+		"discord",
+		"bot",
+		"framework",
+		"typescript",
+		"slash-commands"
+	]
+}

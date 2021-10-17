@@ -1,39 +1,17 @@
-import 'dotenv/config';
 import {
 	Command,
 	config,
-	Mammot,
 	MammotError,
 	option,
 	forced,
 	Mentionable,
 } from '@mammot/core';
-import {CommandInteraction, Intents, User} from 'discord.js';
-import {green} from 'colorette';
-
-const mammot = Mammot.client({
-	intents: [
-		Intents.FLAGS.GUILDS,
-		Intents.FLAGS.GUILD_MESSAGES,
-		Intents.FLAGS.GUILD_MEMBERS,
-	],
-
-	developmentGuild: process.env.DEVELOPMENT_GUILD_ID!,
-
-	async onError(interaction, error) {
-		console.warn(error);
-		return Promise.resolve('Something went wrong!');
-	},
-
-	onReady(user) {
-		console.log(green('ready -'), `Logged into client as ${user.username}`);
-	},
-});
+import {CommandInteraction, User} from 'discord.js';
 
 const codeblock = (v: string) => `\`\`\`${v}\`\`\``;
 
 @config('ratio', {description: 'Command will ratio somebody'})
-class Ratio extends Command {
+export default class Ratio extends Command {
 	public async run(
 		interaction: CommandInteraction,
 
@@ -74,17 +52,3 @@ class Ratio extends Command {
 		});
 	}
 }
-
-@config('ping', {
-	description: 'ping pong!',
-})
-class Ping extends Command {
-	public async run(interaction: CommandInteraction) {
-		await interaction.reply({
-			content: ':ninja:',
-			ephemeral: true,
-		});
-	}
-}
-
-void mammot.load([Ratio, Ping]).login(process.env.DISCORD_TOKEN);
