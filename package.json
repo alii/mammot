@@ -54,6 +54,7 @@
 		"slash-commands"
 	],
 	"dependencies": {
-		"colorette": "^2.0.16"
+		"colorette": "^2.0.16",
+		"util": "^0.12.4"
 	}
 }

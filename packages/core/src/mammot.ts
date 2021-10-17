@@ -11,6 +11,9 @@ import {Command, ConstructableCommand} from './command';
 import {MammotError} from './errors';
 import {readCommand} from './reflection';
 import {StandardEmbed} from './structs/standard-embed';
+import {readdirSync, lstatSync} from 'fs';
+import {rootData} from './lib/rootData';
+import {resolve, extname, parse} from 'path';
 
 export interface MammotOptions extends ClientOptions {
 	developmentGuild: Snowflake;
@@ -75,34 +78,68 @@ export class Mammot {
 
 	/**
 	 * Registers a command.
-	 * @param commands Commands to register.
+	 * @param commands Array of commands or a string of a directory of commands to register
 	 * @returns The client.
 	 */
-	public addCommands<
-		// Guarantee at least one item in array with these generics
-		V extends ConstructableCommand,
-		T extends readonly [V, ...V[]],
-	>(commands: T) {
-		const mapped = commands.map(Cmd => new Cmd(this));
+	public load<T extends ConstructableCommand>(commands: T[] | string) {
+		if (Array.isArray(commands)) {
+			const mapped = commands.map(Cmd => new Cmd(this));
 
-		if (this.hasStartedLogin) {
-			throw new MammotError('Cannot add commands after login');
-		}
-
-		for (const command of mapped) {
-			const {name, ...config} = readCommand(command);
-
-			if (config.options.length + 1 !== command.run.length) {
-				throw new Error(
-					`Found too many arguments in the ${
-						command.constructor.name
-					} command. Expected ${config.options.length + 1} but found ${
-						command.run.length
-					} instead.`,
-				);
+			if (this.hasStartedLogin) {
+				throw new MammotError('Cannot add commands after login');
 			}
 
-			this.commands.set(name, {name, command, ...config});
+			for (const command of mapped) {
+				const {name, ...config} = readCommand(command);
+
+				if (config.options.length + 1 !== command.run.length) {
+					throw new Error(
+						`Found too many arguments in the ${
+							command.constructor.name
+						} command. Expected ${config.options.length + 1} but found ${
+							command.run.length
+						} instead.`,
+					);
+				}
+
+				this.commands.set(name, {name, command, ...config});
+			}
+		} else {
+			const extensions = ['.js', '.cjs', '.mjs', '.ts', '.tsx'];
+			const directory = `${rootData()}\\${commands}`;
+
+			if (!lstatSync(directory).isDirectory()) {
+				throw new MammotError(`${directory} is not a directory`);
+			}
+
+			const files: string[] = readdirSync(directory).filter(file =>
+				extensions.includes(extname(file)));
+
+			console.log(
+				`Successfully loaded ${files.length} ${
+					files.length === 1 ? 'file' : 'files'
+				}`,
+			);
+
+			files.forEach(async file => {
+				const cmdName = parse(file).name;
+				const fn = resolve(process.cwd(), 'src', commands, file);
+				const command = (await import(fn)).default as unknown as Command;
+
+				const {name = cmdName, ...config} = readCommand(command);
+
+				if (config.options.length + 1 !== command.run.length) {
+					throw new Error(
+						`Found too many arguments in the ${
+							command.constructor.name
+						} command. Expected ${config.options.length + 1} but found ${
+							command.run.length
+						} instead.`,
+					);
+				}
+
+				this.commands.set(name, {name, command, ...config});
+			});
 		}
 
 		return this;
