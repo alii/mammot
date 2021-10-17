@@ -13,7 +13,7 @@ import {readCommand} from './reflection';
 import {StandardEmbed} from './structs/standard-embed';
 import {readdirSync, lstatSync} from 'fs';
 import {rootData} from './lib/rootData';
-import {resolve, extname, parse} from 'path';
+import {resolve, extname} from 'path';
 
 export interface MammotOptions extends ClientOptions {
 	developmentGuild: Snowflake;

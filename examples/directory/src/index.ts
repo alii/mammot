@@ -1,7 +1,5 @@
 import 'dotenv/config';
-import {
-	Mammot,
-} from '@mammot/core';
+import {Mammot} from '@mammot/core';
 import {Intents} from 'discord.js';
 import {green} from 'colorette';
 

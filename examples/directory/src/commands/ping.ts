@@ -1,7 +1,4 @@
-import {
-	Command,
-	config,
-} from '@mammot/core';
+import {Command, config} from '@mammot/core';
 import {CommandInteraction} from 'discord.js';
 
 @config('ping', {
