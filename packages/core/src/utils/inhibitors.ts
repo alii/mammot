@@ -1,5 +1,6 @@
 import {Inhibitor} from '../types/inhibitors';
 import {GuildMember} from 'discord.js';
+
 export function channel(id: string): Inhibitor {
 	return interaction => interaction.channel?.id === id;
 }
