@@ -1,3 +1,5 @@
+import {ApiErrors, apiErrorMap} from './types/errors';
+
 /**
  * An error that will have the message sent back to the user
  */
@@ -7,7 +9,7 @@ export class MammotError extends Error {
 	 * @param message The message to display to the user
 	 * @constructor
 	 */
-	public constructor(message: string) {
-		super(message);
+	public constructor(msg: ApiErrors) {
+		super(apiErrorMap[msg].message);
 	}
 }

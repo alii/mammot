@@ -7,6 +7,7 @@ import {
 	option,
 	forced,
 	Mentionable,
+	ApiErrors,
 } from '@mammot/core';
 import {CommandInteraction, Intents, User} from 'discord.js';
 import {green} from 'colorette';
@@ -63,7 +64,7 @@ class Ratio extends Command {
 			// this error will be displayed to the user as it is as MammotError.
 			// errors that are *not* MammotError will not have their message
 			// displayed to the user.
-			throw new MammotError('Something went wrong! Oops..');
+			throw new MammotError(ApiErrors.UNKNOWN);
 		}
 
 		await interaction.channel?.send(`<@${user.id}> get ratioeddd`);
