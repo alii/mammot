@@ -3,7 +3,6 @@ import {
 	Command,
 	config,
 	Mammot,
-	MammotError,
 	option,
 	forced,
 	Mentionable,
@@ -58,14 +57,6 @@ class Ratio extends Command {
 		})
 		amount?: number,
 	) {
-		if (Math.random() > 0.8) {
-			// Demonstration of throwing errors
-			// this error will be displayed to the user as it is as MammotError.
-			// errors that are *not* MammotError will not have their message
-			// displayed to the user.
-			throw new MammotError('Something went wrong! Oops..');
-		}
-
 		await interaction.channel?.send(`<@${user.id}> get ratioeddd`);
 
 		await interaction.reply({
