@@ -3,11 +3,9 @@ import {
 	Command,
 	config,
 	Mammot,
-	MammotError,
 	option,
 	forced,
 	Mentionable,
-	ApiErrors,
 } from '@mammot/core';
 import {CommandInteraction, Intents, User} from 'discord.js';
 import {green} from 'colorette';
@@ -59,14 +57,6 @@ class Ratio extends Command {
 		})
 		amount?: number,
 	) {
-		if (Math.random() > 0.8) {
-			// Demonstration of throwing errors
-			// this error will be displayed to the user as it is as MammotError.
-			// errors that are *not* MammotError will not have their message
-			// displayed to the user.
-			throw new MammotError(ApiErrors.UNKNOWN);
-		}
-
 		await interaction.channel?.send(`<@${user.id}> get ratioeddd`);
 
 		await interaction.reply({
