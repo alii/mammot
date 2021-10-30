@@ -10,6 +10,6 @@ Simple documentation is available in our [Discord server](https://discord.com/in
 
 ## Inviting your bot
 ```bash
-# Replace {botID} with your bot ID
+# Replace {botID} with your bot client ID
 https://discord.com/api/oauth2/authorize?client_id={botID}permissions=8&scope=applications.commands%20bot
 ```
