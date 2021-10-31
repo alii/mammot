@@ -62,20 +62,6 @@ export class Mammot {
 		console.log(result);
 	}
 
-	/**
-	 * Loads a command from a seperate directory
-	 * @param commands Commands to load from that directory.
-	 * @returns The client
-	 */
-	public static async loadCommands() {
-		const files = fs.readdirSync(path.join(__dirname, ''));
-		await files.forEach(async (file: string) => {
-			if (file.endsWith('ts')) {
-				const command: Command = (await import(path.join(__dirname, 'impl', file))).default;
-			}
-		}
-	}
-
 	public readonly commands: Map<string, ParsedCommand> = new Map();
 	public readonly client: DiscordClient<true>;
 	private readonly options;
