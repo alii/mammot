@@ -5,4 +5,4 @@ import {CommandInteraction, PermissionString} from 'discord.js';
  */
 export type Inhibitor =
 	| PermissionString
-	| ((interaction: CommandInteraction) => Promise<boolean> | boolean);
+	| ((interaction: CommandInteraction) => Promise<void> | void);

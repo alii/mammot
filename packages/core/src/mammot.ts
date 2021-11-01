@@ -11,6 +11,7 @@ import {Command, ConstructableCommand} from './command';
 import {MammotError} from './errors';
 import {readCommand} from './reflection';
 import {StandardEmbed} from './structs/standard-embed';
+import {ApiErrors} from './types/errors';
 
 export interface MammotOptions extends ClientOptions {
 	developmentGuild: Snowflake;
@@ -86,7 +87,7 @@ export class Mammot {
 		const mapped = commands.map(Cmd => new Cmd(this));
 
 		if (this.hasStartedLogin) {
-			throw new MammotError('Cannot add commands after login');
+			throw new MammotError(ApiErrors.NO_COMMANDS_AFTER_LOGIN);
 		}
 
 		for (const command of mapped) {
@@ -142,24 +143,18 @@ export class Mammot {
 
 			try {
 				for (const inhibitor of rest.inhibitors ?? []) {
-					let allowed = true;
-
 					if (typeof inhibitor === 'string') {
-						allowed = Boolean(interaction.memberPermissions?.has(inhibitor));
+						if (!interaction.memberPermissions?.has(inhibitor)) {
+							throw new MammotError(ApiErrors.NO_PERMISSION);
+						}
 					} else {
 						// eslint-disable-next-line no-await-in-loop
-						allowed = await inhibitor(interaction);
-					}
-
-					if (!allowed) {
-						throw new Error('You do not have permission to run this command!');
+						await inhibitor(interaction);
 					}
 				}
 
-				await command.run(
-					interaction,
-					...command.resolveMetadata(interaction, options),
-				);
+				const parameters = await command.resolveOptions(interaction, options);
+				await command.run(interaction, ...parameters);
 			} catch (error: unknown) {
 				let message;
 
