@@ -6,13 +6,11 @@ import {
 	Snowflake,
 } from 'discord.js';
 import {inspect} from 'util';
-import fs from 'fs';
-import path from 'path';
 import {CommandMetadata, OptionMetadata} from './types';
 import {Command, ConstructableCommand} from './command';
 import {MammotError} from './errors';
 import {readCommand} from './reflection';
-import {StandardEmbed} from './types/structs/standard-embed';
+import {StandardEmbed} from './structs/standard-embed';
 
 export interface MammotOptions extends ClientOptions {
 	developmentGuild: Snowflake;
