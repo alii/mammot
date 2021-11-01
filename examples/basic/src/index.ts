@@ -3,7 +3,6 @@ import {
 	Command,
 	config,
 	Mammot,
-	MammotError,
 	option,
 	forced,
 	Mentionable,
@@ -17,11 +16,14 @@ const mammot = Mammot.client({
 		Intents.FLAGS.GUILD_MESSAGES,
 		Intents.FLAGS.GUILD_MEMBERS,
 	],
+
 	developmentGuild: process.env.DEVELOPMENT_GUILD_ID!,
+
 	async onError(interaction, error) {
 		console.warn(error);
 		return Promise.resolve('Something went wrong!');
 	},
+
 	onReady(user) {
 		console.log(green('ready -'), `Logged into client as ${user.username}`);
 	},
@@ -55,14 +57,6 @@ class Ratio extends Command {
 		})
 		amount?: number,
 	) {
-		if (Math.random() > 0.8) {
-			// Demonstration of throwing errors
-			// this error will be displayed to the user as it is as MammotError.
-			// errors that are *not* MammotError will not have their message
-			// displayed to the user.
-			throw new MammotError('Something went wrong! Oops..');
-		}
-
 		await interaction.channel?.send(`<@${user.id}> get ratioeddd`);
 
 		await interaction.reply({
@@ -72,4 +66,16 @@ class Ratio extends Command {
 	}
 }
 
-void mammot.addCommands([Ratio]).login(process.env.DISCORD_TOKEN);
+@config('ping', {
+	description: 'ping pong!',
+})
+class Ping extends Command {
+	public async run(interaction: CommandInteraction) {
+		await interaction.reply({
+			content: ':ninja:',
+			ephemeral: true,
+		});
+	}
+}
+
+void mammot.addCommands([Ratio, Ping]).login(process.env.DISCORD_TOKEN);

@@ -1,7 +1,7 @@
 {
 	"name": "mammot",
 	"private": true,
-	"version": "0.0.6",
+	"version": "0.0.9",
 	"author": "Alistair Smith <hi@alistair.sh>",
 	"license": "MIT",
 	"devDependencies": {
@@ -11,6 +11,7 @@
 		"@preconstruct/cli": "^2.1.5",
 		"@typescript-eslint/eslint-plugin": "^5.0.0",
 		"@typescript-eslint/parser": "^5.0.0",
+		"colorette": "^2.0.16",
 		"eslint": "^8.0.1",
 		"eslint-config-marine": "^9.0.6",
 		"eslint-config-react-hooks": "^1.0.0",
@@ -52,8 +53,5 @@
 		"framework",
 		"typescript",
 		"slash-commands"
-	],
-	"dependencies": {
-		"colorette": "^2.0.16"
-	}
+	]
 }

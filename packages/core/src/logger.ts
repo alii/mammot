@@ -23,6 +23,12 @@ export class Logger {
   error(...args: unknown[]) {
         console.log(this.prefix(c.red, 'error'), ...args);
   }
+  debug(...args: unknown[]) {
+        console.log(this.prefix((c.blue), 'debug'), ...args);
+  }
+  warn(...args: unknown[]) {
+      console.log(this.prefix((c.yellow), 'warning'), ...args);
+  }
 
   private prefix(color: c.Color | c.Color[], text: string) {
     const colored = Array.isArray(color)

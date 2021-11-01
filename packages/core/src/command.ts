@@ -1,4 +1,5 @@
-import {CommandInteraction} from 'discord.js';
+/* eslint-disable no-await-in-loop */
+import {CommandInteraction, Role} from 'discord.js';
 import {GetAbstractConstructorArgs, OptionMetadata} from './types';
 import {Mammot} from './mammot';
 
@@ -9,7 +10,7 @@ export abstract class Command {
 		this.mammot = mammot;
 	}
 
-	public resolveMetadata(
+	public async resolveOptions(
 		interaction: CommandInteraction,
 		metadatum: OptionMetadata[],
 	) {
@@ -44,7 +45,13 @@ export abstract class Command {
 				}
 
 				case 'CHANNEL': {
-					results.push(interaction.options.getChannel(...args));
+					const channel = interaction.options.getChannel(...args);
+
+					const fetched = channel
+						? await interaction.client.channels.fetch(channel.id)
+						: null;
+
+					results.push(fetched);
 					break;
 				}
 
@@ -54,12 +61,42 @@ export abstract class Command {
 				}
 
 				case 'ROLE': {
-					results.push(interaction.options.getRole(...args));
+					const role = interaction.options.getRole(...args);
+
+					const fetched =
+						role instanceof Role
+							? role
+							: role
+							? interaction.guildId
+								? await interaction.client.guilds
+										.fetch(interaction.guildId)
+										.then(async guild => guild.roles.fetch(role.id))
+								: null
+							: null;
+
+					results.push(fetched);
+
 					break;
 				}
 
 				case 'MENTIONABLE': {
-					results.push(interaction.options.getMentionable(...args));
+					const mention = interaction.options.getMentionable(...args);
+
+					if (!mention) {
+						results.push(mention);
+						break;
+					}
+
+					if ('hoist' in mention && interaction.guild) {
+						const role = await interaction.guild.roles.fetch(mention.id);
+						results.push(role);
+					} else if ('id' in mention) {
+						const user = await interaction.client.users.fetch(mention.id);
+						results.push(user);
+					} else {
+						results.push(null);
+					}
+
 					break;
 				}
 
