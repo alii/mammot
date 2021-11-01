@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/quotes */
+
 export enum ApiErrors {
 	UNKNOWN = 'something_went_wrong',
 	NO_PERMISSION = 'no_permission',
