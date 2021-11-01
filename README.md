@@ -9,6 +9,7 @@ For a basic example, see [./examples/basic/src/index.ts](https://github.com/alii
 Simple documentation is available in our [Discord server](https://discord.com/invite/rbpcNQwZdD). Eventually we will have a site with documentation listed.
 
 ## Inviting your bot
+
 ```bash
 # Replace {botID} with your bot client ID
 https://discord.com/api/oauth2/authorize?client_id={botID}permissions=8&scope=applications.commands%20bot
