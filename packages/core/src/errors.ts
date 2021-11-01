@@ -1,3 +1,4 @@
+import {Values} from './types';
 import {ApiErrors, apiErrorMap} from './types/errors';
 
 /**
@@ -9,7 +10,11 @@ export class MammotError extends Error {
 	 * @param message The message to display to the user
 	 * @constructor
 	 */
-	public constructor(msg: ApiErrors) {
-		super(apiErrorMap[msg].message);
+	public constructor(message: ApiErrors | string) {
+		const value = apiErrorMap[message as ApiErrors] as
+			| Values<typeof apiErrorMap>
+			| undefined;
+
+		super(value?.message ?? message);
 	}
 }
