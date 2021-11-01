@@ -15,10 +15,11 @@ export class Logger {
   info(...args: unknown[]) {
         console.info(this.prefix(c.blue, 'info'), ...args);
   }
-  
+
   success(...args: unknown[]) {
         console.log(this.prefix([c.green], 'success'), ...args);
   }
+
   error(...args: unknown[]) {
         console.log(this.prefix(c.red, 'error'), ...args);
   }
