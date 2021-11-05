@@ -5,6 +5,7 @@
 	"module": "dist/mammot-core.esm.js",
 	"typings": "dist/mammot-core.cjs.d.ts",
 	"dependencies": {
+		"colorette": "^2.0.16",
 		"discord.js": "^13.2.0",
 		"reflect-metadata": "^0.1.13",
 		"type-fest": "^2.5.0"

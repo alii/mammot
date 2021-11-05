@@ -1335,6 +1335,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@mammot/core@workspace:packages/core"
   dependencies:
+    colorette: ^2.0.16
     discord.js: ^13.2.0
     reflect-metadata: ^0.1.13
     type-fest: ^2.5.0
