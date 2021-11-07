@@ -13,6 +13,5 @@ module.exports = {
 		'@typescript-eslint/no-implied-eval': 'off',
 		'operator-linebreak': 'off',
 		'@typescript-eslint/indent': 'off',
-		'@typescript-eslint/explicit-member-accessibility': 'off'
 	},
 };
