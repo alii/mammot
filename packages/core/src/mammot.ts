@@ -12,9 +12,11 @@ import {MammotError} from './errors';
 import {readCommand} from './reflection';
 import {StandardEmbed} from './structs/standard-embed';
 import {ApiErrors} from './types/errors';
+import {Logger} from './logger';
 
 export interface MammotOptions extends ClientOptions {
 	developmentGuild: Snowflake;
+	loggerName?: string;
 
 	onReady?(user: ClientUser): Promise<void> | void;
 
@@ -39,7 +41,7 @@ interface ParsedCommand extends CommandMetadata {
 /**
  * The client for the bot.
  */
-export class Mammot {
+export class Mammot extends Logger {
 	public static client(options: MammotOptions & {dev?: boolean}) {
 		const {dev = process.env.NODE_ENV === 'development', ...rest} = options;
 		return new Mammot(rest, dev, false);
@@ -70,6 +72,8 @@ export class Mammot {
 		private readonly isDev: boolean,
 		private hasStartedLogin: boolean,
 	) {
+		super(options.loggerName ?? 'mammot-client');
+
 		this.options = options;
 		this.client = new DiscordClient(options);
 	}

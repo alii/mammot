@@ -7,6 +7,6 @@ export * from './reflection';
 export * from './errors';
 export * from './types/mentionable';
 export * from './types/inhibitors';
-export * from './logger';
 export * from './types/errors';
 export * from './utils/inhibitors';
+export * from './logger';
