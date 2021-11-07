@@ -1,6 +1,6 @@
 {
 	"name": "@mammot/core",
-	"packageManager": "yarn@3.0.2",
+	"packageManager": "yarn@3.1.0",
 	"main": "dist/mammot-core.cjs.js",
 	"module": "dist/mammot-core.esm.js",
 	"typings": "dist/mammot-core.cjs.d.ts",

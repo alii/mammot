@@ -1,6 +1,6 @@
 {
 	"name": "@mammot/docs",
-	"packageManager": "yarn@3.0.2",
+	"packageManager": "yarn@3.1.0",
 	"homepage": "https://github.com/alii/mammot",
 	"license": "MIT",
 	"repository": "https://github.com/alii/mammot",

@@ -8,7 +8,6 @@ import {
 	Mentionable,
 } from '@mammot/core';
 import {CommandInteraction, Intents, User} from 'discord.js';
-import {green} from 'colorette';
 
 const mammot = Mammot.client({
 	intents: [
@@ -20,12 +19,12 @@ const mammot = Mammot.client({
 	developmentGuild: process.env.DEVELOPMENT_GUILD_ID!,
 
 	async onError(interaction, error) {
-		console.warn(error);
+		mammot.warn(error);
 		return Promise.resolve('Something went wrong!');
 	},
 
 	onReady(user) {
-		console.log(green('ready -'), `Logged into client as ${user.username}`);
+		mammot.success(`Logged into client as ${user.username}`);
 	},
 });
 
