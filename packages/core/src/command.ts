@@ -31,7 +31,7 @@ export abstract class Command {
 		const results: unknown[] = [];
 
 		for (const metadata of metadatum) {
-			const args = [metadata.name, metadata.config.required ?? false] as const;
+			const args = [metadata.name, metadata.required ?? false] as const;
 
 			switch (metadata.config.type) {
 				case 'STRING': {

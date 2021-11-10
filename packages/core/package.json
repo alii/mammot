@@ -6,9 +6,9 @@
 	"typings": "dist/mammot-core.cjs.d.ts",
 	"dependencies": {
 		"colorette": "^2.0.16",
-		"discord.js": "^13.2.0",
+		"discord.js": "^13.3.1",
 		"reflect-metadata": "^0.1.13",
-		"type-fest": "^2.5.0"
+		"type-fest": "^2.5.3"
 	},
 	"homepage": "https://github.com/alii/mammot",
 	"license": "MIT",

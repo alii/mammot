@@ -9,6 +9,7 @@ export type OptionMetadataTypes = Exclude<
 export interface OptionMetadata {
 	name: string;
 	index: number;
+	required?: boolean;
 
 	/**
 	 * Some types like MENTIONABLE cannot be inferred
