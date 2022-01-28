@@ -17,6 +17,7 @@ import {Logger} from './logger';
 export interface MammotOptions extends ClientOptions {
 	developmentGuild: Snowflake;
 	loggerName?: string;
+	client?: DiscordClient<true>;
 
 	onReady?(user: ClientUser): Promise<void> | void;
 
@@ -42,9 +43,8 @@ interface ParsedCommand extends CommandMetadata {
  * The client for the bot.
  */
 export class Mammot extends Logger {
-	public static client(options: MammotOptions & {dev?: boolean}) {
-		const {dev = process.env.NODE_ENV === 'development', ...rest} = options;
-		return new Mammot(rest, dev, false);
+	public static client(options: MammotOptions) {
+		return new Mammot(options);
 	}
 
 	public static debugCommands(commands: Mammot['commands']) {
@@ -65,17 +65,16 @@ export class Mammot extends Logger {
 
 	public readonly commands: Map<string, ParsedCommand> = new Map();
 	public readonly client: DiscordClient<true>;
-	private readonly options;
 
-	private constructor(
-		options: MammotOptions,
-		private readonly isDev: boolean,
-		private hasStartedLogin: boolean,
-	) {
+	private readonly options;
+	private hasStartedLogin;
+
+	private constructor(options: MammotOptions, hasStartedLogin = false) {
 		super(options.loggerName ?? 'mammot-client');
 
+		this.hasStartedLogin = hasStartedLogin;
 		this.options = options;
-		this.client = new DiscordClient(options);
+		this.client = options.client ?? new DiscordClient<true>(options);
 	}
 
 	/**
@@ -83,11 +82,9 @@ export class Mammot extends Logger {
 	 * @param commands Commands to register.
 	 * @returns The client.
 	 */
-	public addCommands<
-		// Guarantee at least one item in array with these generics
-		V extends ConstructableCommand,
-		T extends readonly [V, ...V[]],
-	>(commands: T) {
+	public addCommands(
+		commands: [ConstructableCommand, ...ConstructableCommand[]],
+	) {
 		const mapped = commands.map(Cmd => new Cmd(this));
 
 		if (this.hasStartedLogin) {
@@ -113,12 +110,7 @@ export class Mammot extends Logger {
 		return this;
 	}
 
-	/**
-	 * Load all interactions & login to client.
-	 * @param token Token of your Bot to login with.
-	 * @returns The token of the bot account used.
-	 */
-	public async login(token?: string) {
+	public async pushCommands(location: 'global' | 'development_guild') {
 		const mapped = [...this.commands.values()].map(command => {
 			const options = command.options.reverse().map(option => ({
 				...option.config,
@@ -132,6 +124,22 @@ export class Mammot extends Logger {
 			};
 		});
 
+		if (location === 'development_guild') {
+			await this.client.application.commands.set(
+				mapped,
+				this.options.developmentGuild,
+			);
+		} else {
+			await this.client.application.commands.set(mapped);
+		}
+	}
+
+	/**
+	 * Load all interactions & login to client.
+	 * @param token Token of your Bot to login with.
+	 * @returns The token of the bot account used.
+	 */
+	public async login(token?: string) {
 		this.client.on('interactionCreate', async interaction => {
 			if (!interaction.isCommand()) {
 				return;
@@ -140,6 +148,11 @@ export class Mammot extends Logger {
 			const found = this.commands.get(interaction.commandName);
 
 			if (!found) {
+				await interaction.reply({
+					ephemeral: true,
+					content: 'That command not found :thinking:...',
+				});
+
 				return;
 			}
 
@@ -191,15 +204,6 @@ export class Mammot extends Logger {
 		});
 
 		this.client.once('ready', async () => {
-			if (this.isDev) {
-				await this.client.application.commands.set(
-					mapped,
-					this.options.developmentGuild,
-				);
-			} else {
-				await this.client.application.commands.set(mapped);
-			}
-
 			// Alert user that we are ready
 			await this.options.onReady?.(this.client.user);
 		});
